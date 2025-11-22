@@ -14,15 +14,11 @@ teampythers_streamlit/
 ├── assets/                   # For static resources like CSS and images
 │   └── style.css             # Your custom styling for the app
 ├── data/                     # Data storage directory
-│   └── raw_dataset.csv       # Your primary project dataset file
+│   └── dataset.csv           # Your primary project dataset file
 ├── src/                      # Source code package (All Python logic lives here)
-│   ├── __init__.py           # Makes 'src' a Python package
 │   ├── pages/                # Sub-package for all UI/View classes
-│   │   ├── __init__.py       # Makes 'pages' a Python package
-│   │   ├── Overview.py       # Section 1: OverviewPage Class (View)
-│   │   ├── Data_Prep.py      # Section 2: DataPrepPage Class (View)
-│   │   ├── Analysis.py       # Section 3: AnalysisPage Class (View)
-│   │   └── Conclusions.py    # Section 4: ConclusionsPage Class (View)
+│   │   ├── overview_01.py    #
+    │   ├── data_prep_02.py   #
 │   ├── app_controller.py     # StreamlitApp Class (The Controller: Handles state and navigation)
 │   └── data_manager.py       # DataManager Class (The Model: Handles data loading, cleaning, and transformation)
 ├── app.py                    # Minimal entry point (The Runner: Starts the application)

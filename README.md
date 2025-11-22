@@ -4,6 +4,30 @@
 
 details to be added.
 
+### Project Structure
+to be improved... or changed
+```angular2html
+teampythers_streamlit/
+├── .gitignore                # Tells Git to ignore files like venv/ and notes/
+├── .streamlit/               # Streamlit configuration directory
+│   └── secrets.toml          # For API keys and credentials
+├── assets/                   # For static resources like CSS and images
+│   └── style.css             # Your custom styling for the app
+├── data/                     # Data storage directory
+│   └── raw_dataset.csv       # Your primary project dataset file
+├── src/                      # Source code package (All Python logic lives here)
+│   ├── __init__.py           # Makes 'src' a Python package
+│   ├── pages/                # Sub-package for all UI/View classes
+│   │   ├── __init__.py       # Makes 'pages' a Python package
+│   │   ├── Overview.py       # Section 1: OverviewPage Class (View)
+│   │   ├── Data_Prep.py      # Section 2: DataPrepPage Class (View)
+│   │   ├── Analysis.py       # Section 3: AnalysisPage Class (View)
+│   │   └── Conclusions.py    # Section 4: ConclusionsPage Class (View)
+│   ├── app_controller.py     # StreamlitApp Class (The Controller: Handles state and navigation)
+│   └── data_manager.py       # DataManager Class (The Model: Handles data loading, cleaning, and transformation)
+├── app.py                    # Minimal entry point (The Runner: Starts the application)
+└── requirements.txt          # List of Python dependencies (streamlit, pandas, plotly, etc.)
+```
 ### Development Team
 
 This project is a collaborative effort by the following members:
@@ -18,9 +42,9 @@ This project is a collaborative effort by the following members:
 
 ### Academic Context
 
-| Detail | Value |
-| :--- | :--- |
-| **Course Subject** | CS365 - Data Analytics and Visualization  |
-| **Institution** | Cebu Institute of Technology - University |
-| **Implementation Scope** | This project serves as the comprehensive implementation of **all** concepts taught in CS375, **to be added** |
-| **Skills Leveraged** | The team has incorporated **self-taught skills** **to be added** |
+| Detail | Value                                                                                                        |
+| :--- |:-------------------------------------------------------------------------------------------------------------|
+| **Course Subject** | CS365 - Data Analytics and Visualization                                                                     |
+| **Institution** | Cebu Institute of Technology - University                                                                    |
+| **Implementation Scope** | This project serves as the comprehensive implementation of **all** concepts taught in CS365, **to be added** |
+| **Skills Leveraged** | The team has incorporated **self-taught skills** **to be added**                                             |

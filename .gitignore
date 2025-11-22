@@ -1,7 +1,7 @@
 #.gitignore
 .idea
 
-# ignores 'note' folder entirely (ka nate)
+# ignores 'note' folder entirely (ka nate DO NOT REMOVE)
 notes/
 
 # Ignore Python bytecode files

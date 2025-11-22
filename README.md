@@ -9,8 +9,8 @@ to be improved... or changed
 ```angular2html
 teampythers_streamlit/
 ├── .gitignore                # Tells Git to ignore files like venv/ and notes/
-├── .streamlit/               # Streamlit configuration directory
-│   └── secrets.toml          # For API keys and credentials
+├── .streamlit/               # Streamlit configuration directory (not in our project)
+│   └── secrets.toml          # For API keys and credentials (not in our project)
 ├── assets/                   # For static resources like CSS and images
 │   └── style.css             # Your custom styling for the app
 ├── data/                     # Data storage directory

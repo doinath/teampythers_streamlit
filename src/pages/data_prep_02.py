@@ -6,3 +6,6 @@ class DataPrepPage:
         
     def render(self):
         st.header('02 Data Preparation')
+
+        st.markdown('hi')
+        st.markdown('test')

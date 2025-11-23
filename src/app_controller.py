@@ -10,7 +10,7 @@ class StreamlitApp:
     
         self.pages = {
             '01_Overview': overview_01.OverviewPage(self.data_manager),
-            '02_Data Prep': data_prep_02.DataPrep(self.data_manager)
+            '02_Data Prep': data_prep_02.DataPrepPage(self.data_manager)
         }
         
     def run(self):

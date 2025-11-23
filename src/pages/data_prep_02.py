@@ -5,4 +5,4 @@ class DataPrepPage:
         self.dm = data_manager
         
     def render(self):
-        pass
+        st.header('02 Data Preparation')

@@ -19,7 +19,7 @@ class StreamlitApp:
         
         st.set_page_config(layout='wide')
         
-        self.inject_css('assets/styles.css')
+        self.inject_css('assets/css/styles.css')
         
         st.sidebar.title('Team Pythers Project')
         

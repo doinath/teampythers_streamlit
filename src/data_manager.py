@@ -49,26 +49,50 @@ class DataManager:
         if self.clean_df is None or self.clean_df.empty:
             print('cannot clean data: DataFrame is empty.')
             return
-        
-        # st.cache_data.clear() 
-        
-        # --- TODO: IMPLEMENTATION START ---
-        
-        # 1. Handle Missing Values:
-        # Example: self.clean_df.fillna(self.clean_df['some_col'].mean(), inplace=True)
-        # Your code here...
-        
-        # 2. Feature Engineering / Encoding:
-        # Example: self.clean_df = pd.get_dummies(self.clean_df, columns=['category_col'])
-        # Your code here...
 
-        # 3. Data Scaling/Normalization (if required for your analysis technique):
-        # Example: from sklearn.preprocessing import StandardScaler
-        # scaler = StandardScaler()
-        # self.clean_df[['feature1', 'feature2']] = scaler.fit_transform(self.clean_df[['feature1', 'feature2']])
-        # Your code here...
-        
-        # --- TODO: IMPLEMENTATION END ---
+        print('Starting data cleaning and transformation for the pythers project.')
+
+        self.clean_df['date'] = pd.to_datetime(self.clean_df['date'])
+
+        self.clean_df['year'] = self.clean_df['date'].dt.year
+        self.clean_df['quarter'] = self.clean_df['date'].dt.quarter
+
+        # config
+
+        numerical_features = ['price', 'usdprice', 'latitude', 'longitude']
+        categorical_features = ['admin1', 'admin2', 'market', 'category', 'commodity', 'pricetype']
+
+
+        # scaling
+        numerical_transformer = Pipeline(steps=[
+            ('imputer', SimpleImputer(strategy='mean')),
+            ('scaler', StandardScaler())
+        ])
+
+        categorical_transformer = Pipeline(steps=[
+            ('imputer', SimpleImputer(strategy='constant', fill_value='missing'))
+        ])
+
+        preprocessor = ColumnTransformer(
+            transformers=[
+                ('num', numerical_transformer, numerical_features),
+                ('cat', categorical_transformer, categorical_features)
+            ],
+            remainder = 'passthrough'
+        )
+
+        try:
+            transformed_data = preprocessor.fit_transform(self.clean_df[numerical_features + categorical_features])
+
+            transformed_df = pd.DataFrame(
+                transformed_data,
+                columns=numerical_features + categorical_features
+            )
+
+            self.clean_df = transformed_df.join(self.clean_df[['date', 'year', 'quarter']])
+
+        except Exception as e:
+            print(f'An unexpected error occured during data transformation: {e}')
         
         print("Data cleaning and transformation complete.")
         

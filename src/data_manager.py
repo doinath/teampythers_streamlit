@@ -31,7 +31,8 @@ class DataManager:
         """
         
         try:
-            self.raw_df = pd.read_csv(self.file_path)
+
+            self.raw_df = pd.read_csv(self.file_path, skiprows[1])
             self.clean_df = self.raw_df.copy()
             print('data loaded sucessfully.')
             

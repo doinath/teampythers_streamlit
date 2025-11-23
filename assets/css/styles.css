@@ -1,0 +1,222 @@
+/* =================================================================================
+   1. GLOBAL VARIABLES & PALETTES
+   ================================================================================= */
+
+/* --- LIGHT THEME (DEFAULT) --- */
+:root {
+    /* Palette: #537B2F (Primary), #8DA750 (Mid), #E4EB9C (Light) */
+
+    /* Backgrounds */
+    --main-bg-gradient: linear-gradient(130deg, #537B2F 0%, #E4EB9C 70%);
+
+/* Sidebar: Fades from Mid Green to Light Green */
+--sidebar-bg-gradient: linear-gradient(70deg, #142C14 0%, #537B2F 70%);
+
+    /* Text Colors */
+    --text-main: #142C14;           /* Dark Jungle Green (High Contrast on Light BG) */
+    --text-sidebar: #E4EB9C;        /* Light Green (High Contrast on Dark Sidebar) */
+    --header-color: #2D5128;
+
+    /* Components */
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: #8DA750;
+    --metric-value: #2D5128;
+    --metric-label: #142C14;
+}
+
+/* --- DARK THEME (SYSTEM OVERRIDE) --- */
+@media (prefers-color-scheme: light) {
+    :root {
+        /* Palette: #142C14 (Deep), #2D5128 (Mid), #537B2F (Highlight) */
+
+        /* Backgrounds */
+        --main-bg-gradient: linear-gradient(135deg, #142C14 0%, #2D5128 100%);
+        --sidebar-bg-gradient: linear-gradient(180deg, #0E1F0E 0%, #142C14 100%);
+
+        /* Text Colors */
+        --text-main: #E4EB9C;       /* Light Green text on Dark BG */
+        --text-sidebar: #8DA750;    /* Mid Green text on Dark Sidebar */
+        --header-color: #8DA750;
+
+        /* Components */
+        --card-bg: rgba(45, 81, 40, 0.4); /* Glassy Dark Green */
+        --card-border: #537B2F;
+        --metric-value: #FFFFFF;
+        --metric-label: #E4EB9C;
+    }
+}
+
+/* =================================================================================
+   2. MAIN LAYOUT STYLING
+   ================================================================================= */
+
+/* 1. Main Application Background */
+.stApp {
+    background: var(--main-bg-gradient) !important;
+    background-attachment: fixed !important;
+    background-size: cover;
+}
+
+/* 2. Sidebar Background */
+section[data-testid="stSidebar"] {
+    background: var(--sidebar-bg-gradient) !important;
+    border-right: 1px solid var(--card-border);
+}
+
+/* 3. General Text Styling */
+p, label, li, .stMarkdown, .stDataFrame, .stTable {
+    color: var(--text-main) !important;
+}
+
+/* 4. Headers */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--header-color) !important;
+    background: transparent;
+    font-weight: 700;
+}
+
+/* =================================================================================
+   3. COMPONENT STYLING
+   ================================================================================= */
+
+/* 1. Metric Cards (Glassmorphism) */
+div[data-testid="stMetric"] {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--card-border);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+div[data-testid="stMetricLabel"] p {
+    color: var(--metric-label) !important;
+    font-weight: 600;
+}
+
+div[data-testid="stMetricValue"] {
+    color: var(--metric-value) !important;
+}
+
+/* 2. Tables & DataFrames */
+div[data-testid="stDataFrame"], div[data-testid="stTable"] {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+/* 3. Header/Navbar (Transparent) */
+header[data-testid="stHeader"] {
+    background-color: transparent !important;
+}
+
+/* 4. Expander Headers */
+.streamlit-expanderHeader {
+    background-color: var(--card-bg) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+}
+
+/* =================================================================================
+   4. SIDEBAR SPECIFIC ELEMENTS
+   ================================================================================= */
+
+/* A. Sidebar Title */
+section[data-testid="stSidebar"] h1 {
+    color: #E4EB9C !important;      /* Always Light because Sidebar is always Dark */
+    font-size: 2.5rem !important;
+    font-family: 'Helvetica', sans-serif !important;
+    font-weight: 800 !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    margin-bottom: 0px !important;
+}
+
+/* B. Sidebar Caption */
+section[data-testid="stSidebar"] .stCaption {
+    color: #E4EB9C !important;
+    font-size: 1.1rem !important;
+    font-style: italic !important;
+    margin-top: -10px !important;
+}
+
+/* C. Divider Line */
+section[data-testid="stSidebar"] hr {
+    margin: 1.5em 0 !important;
+    border-color: #8DA750 !important;
+    opacity: 0.5;
+}
+
+/* D. Radio Buttons (Navigation) */
+section[data-testid="stSidebar"] div[data-testid="stRadio"] label {
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: var(--text-sidebar) !important;
+}
+
+section[data-testid="stSidebar"] div[data-testid="stRadio"] div[role="radiogroup"] p {
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    padding: 5px 0;
+    color: var(--text-sidebar) !important;
+}
+
+/* E. Info/Alert Box */
+section[data-testid="stSidebar"] div[data-testid="stAlert"] {
+    background-color: #8DA750 !important; /* Darker transparent bg */
+    border: 0px solid #8DA750 !important;
+    color: #E4EB9C !important;
+    font-size: 0.9rem !important;
+    border-radius: 10px;
+}
+
+/* =================================================================================
+   5. TAB STYLING (PROJECT & DATA DICTIONARY)
+   ================================================================================= */
+
+/* 1. The Tab Container */
+div[data-baseweb="tab-list"] {
+    gap: 10px; /* Adds space between tabs */
+}
+
+/* 2. The Tab Buttons (Unselected) */
+button[data-baseweb="tab"] {
+    background-color: rgba(255, 255, 255, 0.2) !important; /* Subtle background */
+    border-radius: 8px !important;
+    border: 1px solid transparent !important;
+    padding: 10px 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* 3. The Text Inside the Tabs */
+button[data-baseweb="tab"] div p {
+    font-weight: 800 !important;      /* Make it BOLD */
+    font-size: 1.1rem !important;     /* Make it slightly Bigger */
+    color: var(--header-color) !important; /* Uses your Theme Green */
+    text-shadow: 0px 0px 1px rgba(0,0,0,0.1);
+}
+
+/* 4. The Active (Selected) Tab */
+button[data-baseweb="tab"][aria-selected="true"] {
+    background-color: var(--card-bg) !important; /* Matches your card glass effect */
+    border: 1px solid var(--card-border) !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+}
+
+/* 5. Text Color for Active Tab */
+button[data-baseweb="tab"][aria-selected="true"] div p {
+    color: #537B2F !important; /* Forces the Primary Green */
+}
+
+/* --- DARK MODE SPECIFIC --- */
+@media (prefers-color-scheme: light) {
+    /* Make text lighter in dark mode so it stands out */
+    button[data-baseweb="tab"] div p {
+        color: #E4EB9C !important; /* Lightest Green */
+    }
+
+    button[data-baseweb="tab"][aria-selected="true"] {
+        background-color: rgba(83, 123, 47, 0.3) !important;
+    }
+}

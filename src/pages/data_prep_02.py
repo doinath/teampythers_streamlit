@@ -9,3 +9,5 @@ class DataPrepPage:
 
         st.markdown('hi')
         st.markdown('test')
+
+        print('hello')

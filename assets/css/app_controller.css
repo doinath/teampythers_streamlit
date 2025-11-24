@@ -1,0 +1,34 @@
+/* Style all buttons in the sidebar */
+button[kind="primary"] {
+    background-color: #2E7D32 !important; /* active page */
+    color: white !important;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+button[kind="secondary"] {
+    background-color: #f1f1f1 !important;
+    color: #333 !important;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Hover effect */
+div.stButton > button:hover {
+    transform: scale(1.03);
+    transition: 0.1s ease;
+}
+
+/* Remove default borders and outlines */
+div.stButton > button {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove focus outline (red border after clicking) */
+div.stButton > button:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}

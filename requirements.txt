@@ -14,4 +14,4 @@ seaborn>=0.13.0      # Library built on Matplotlib for statistical visualization
 scikit-learn>=1.3.0  # Required for data transformation (scaling, encoding, imputation)
                      # and for analysis techniques like k-means, regression, etc.
 
-# run using steamlit run app.py
+# run using streamlit run app.py

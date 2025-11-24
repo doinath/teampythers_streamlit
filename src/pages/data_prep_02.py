@@ -4,34 +4,39 @@ import pandas as pd
 
 
 class DataPrepPage:
-    """
-    Page class for Data Exploration & Preparation.
-    Matches the structure required by app_controller.py
-    """
 
     def __init__(self, data_manager):
-        # Store the data manager instance
         self.dm = data_manager
 
     def render(self):
         st.title("🛠️ Data Exploration & Preparation")
 
-        # Get the data from the manager
-        # Note: Using get_data() as per the optimized DataManager structure
         df = self.dm.get_data()
 
         if df is None or df.empty:
             st.error("No data available to analyze.")
             return
 
-        # --- 1. Missing Values Analysis ---
         st.subheader("1. Handling Missing Values")
 
-        # Calculate missing values directly here to be robust
         missing = df.isnull().sum()
-        missing = missing[missing > 0]  # Only show columns with actual missing data
+        missing = missing[missing > 0]
 
         col1, col2 = st.columns([1, 2])
+
+        common_layout = dict(
+            plot_bgcolor="#FFFFFF",
+            paper_bgcolor="#FFFFFF",
+            font=dict(color="#2D5128"),
+            title=dict(
+                font=dict(
+                    size=18,
+                    color="#537B2F"
+
+                )
+            ),
+            margin=dict(l=20, r=20, t=50, b=20),
+        )
 
         with col1:
             if not missing.empty:
@@ -41,28 +46,19 @@ class DataPrepPage:
                 st.success("✅ No missing values found! The dataset has been cleaned by the DataManager pipeline.")
 
         with col2:
-            # Common style settings for consistent look
-            common_layout = dict(
-                plot_bgcolor="#FFFFFF",
-                paper_bgcolor="#FFFFFF",
-                font=dict(color="#2D5128"),  # Dark Green Text
-                title_font=dict(size=18, weight='bold', color="#537B2F"),
-                margin=dict(l=20, r=20, t=50, b=20),
-            )
 
             if not missing.empty:
-                # --- OPTION A: MISSING DATA BAR CHART ---
+
                 fig = px.bar(
                     x=missing.index,
                     y=missing.values,
                     labels={'x': 'Column Name', 'y': 'Missing Rows'},
                     title="⚠️ Data Gap Analysis",
-                    text=missing.values  # Show numbers on top of bars
+                    text=missing.values
                 )
 
-                # Apply Theme Styling
                 fig.update_traces(
-                    marker_color='#E57373',  # A soft red/salmon that complements green
+                    marker_color='#E57373',
                     marker_line_color='#D32F2F',
                     marker_line_width=1.5,
                     textposition='outside'
@@ -77,10 +73,9 @@ class DataPrepPage:
                 st.plotly_chart(fig, use_container_width=True)
 
             else:
-                # --- OPTION B: CLEAN DATA DONUT CHART ---
+
                 st.info("Visualizing Data Integrity:")
 
-                # Create dummy data for the chart
                 dummy_data = pd.DataFrame({
                     'Status': ['Filled Data', 'Missing'],
                     'Count': [100, 0]
@@ -90,26 +85,28 @@ class DataPrepPage:
                     dummy_data,
                     names='Status',
                     values='Count',
-                    hole=0.7,  # Make it a thin donut
+                    hole=0.7,
                     title="<b>Dataset Health Score</b>",
                     color='Status',
                     color_discrete_map={
-                        'Filled Data': '#537B2F',  # Primary Green
+                        'Filled Data': '#537B2F',
                         'Missing': '#E0E0E0'
                     }
                 )
 
-                # Add "100%" Text in the middle
                 fig.update_layout(
                     **common_layout,
                     showlegend=False,
                     annotations=[dict(
                         text='100%<br>CLEAN',
                         x=0.5, y=0.5,
-                        font_size=24,
-                        font_weight='bold',
+
+                        font=dict(
+                            size=24,
+                            color='#537B2F'
+
+                        ),
                         showarrow=False,
-                        font_color='#537B2F'
                     )]
                 )
 
@@ -125,24 +122,29 @@ class DataPrepPage:
 
         st.divider()
 
-        # --- 2. Distributions ---
         st.subheader("2. Categorical Distributions")
 
         col_a, col_b = st.columns(2)
 
         with col_a:
             st.caption("Distribution of Commodities")
-            # Safety check: Ensure commodity column exists
+
             if 'commodity' in df.columns:
                 top_comm = df['commodity'].value_counts().head(10)
                 fig_comm = px.pie(names=top_comm.index, values=top_comm.values, hole=0.4, title="Top 10 Commodities")
+
+                fig_comm.update_layout(
+                    **common_layout,
+                    # FIX: Removed explicit 'title' argument to avoid "multiple values" error.
+                    # The title text is already set by px.pie, and the font is applied via **common_layout.
+                )
                 st.plotly_chart(fig_comm, use_container_width=True)
             else:
                 st.warning("Column 'commodity' not found.")
 
         with col_b:
             st.caption("Retail vs Wholesale Records")
-            # Safety check: Ensure pricetype column exists
+
             if 'pricetype' in df.columns:
                 fig_type = px.bar(
                     df['pricetype'].value_counts(),
@@ -150,7 +152,14 @@ class DataPrepPage:
                     color_discrete_sequence=['#2E8B57'],
                     title="Market Type Count"
                 )
-                fig_type.update_layout(showlegend=False, xaxis_title="Count", yaxis_title="Price Type")
+                fig_type.update_layout(
+                    **common_layout,
+                    showlegend=False,
+                    xaxis_title="Count",
+                    yaxis_title="Price Type",
+                    # FIX: Removed explicit 'title' argument to avoid "multiple values" error.
+                    # The title text is already set by px.bar, and the font is applied via **common_layout.
+                )
                 st.plotly_chart(fig_type, use_container_width=True)
             else:
                 st.warning("Column 'pricetype' not found.")

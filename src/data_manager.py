@@ -54,7 +54,7 @@ class DataManager:
 
         # 1. Date Conversion
         # Coerce errors to NaT (Not a Time) to prevent crashes on bad dates
-        self.clean_df['date'] = pd.to_datetime(self.clean_df['date'], errors='coerce')
+        self.clean_df['date'] = pd.to_datetime(self.clean_df['date'], format='mixed', errors='coerce')
 
         # Drop rows where date failed to parse (essential for Time-Series analysis)
         self.clean_df = self.clean_df.dropna(subset=['date'])

@@ -45,7 +45,7 @@ class StreamlitApp:
         # Sidebar Navigation
         with st.sidebar:
             st.title("Team Pythers")
-            st.caption("Philippines Food Price Analysis")
+            st.caption("Philippine Food Price Analysis")
             st.markdown("---")
 
             # Using radio button for cleaner navigation look

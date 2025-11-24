@@ -8,7 +8,7 @@ class OverviewPage:
         self.dm = data_manager
 
     def render(self):
-        st.title("🇵🇭 Philippines Food Price Analysis")
+        st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to Present")
 
         # Get the data from DataManager
@@ -38,7 +38,7 @@ class OverviewPage:
 
         # --- SECTION 2: TABS FOR ORGANIZATION ---
         # We split the "Project Info" and "Data Health/Stats" to keep the page clean
-        tab_info, tab_health = st.tabs(["Project & Data Dictionary", "Data Health & Distributions"])
+        tab_info, tab_health, tab_team = st.tabs(["Project & Data Dictionary", "Data Health & Distributions", "Meet the Team"])
 
         # --- TAB 1: PROJECT INFO ---
         with tab_info:
@@ -95,23 +95,119 @@ class OverviewPage:
             else:
                 st.success("✅ No missing values detected in the processed dataset (Imputation applied).")
 
-            st.subheader("2. Price Distribution")
+                # --- HISTOGRAM CODE ---
+                st.subheader("2. Price Distribution Analysis")
 
-            # Simple histogram of prices
-            # We filter out extreme outliers for better visualization just for this chart
-            filter_limit = df['price'].quantile(0.95)
-            filtered_view = df[df['price'] < filter_limit]
+                # We filter out extreme outliers for better visualization (95th percentile)
+                filter_limit = df['price'].quantile(0.95)
+                filtered_view = df[df['price'] < filter_limit]
 
-            fig_dist = px.histogram(
-                filtered_view,
-                x="price",
-                nbins=50,
-                title="Distribution of Food Prices (95th Percentile)",
-                labels={'price': 'Price (PHP)'},
-                color_discrete_sequence=['#2E8B57']  # Theme green
-            )
-            st.plotly_chart(fig_dist, use_container_width=True)
-            st.caption(f"Note: This histogram excludes extreme outliers above ₱{filter_limit:,.2f} for clarity.")
+                # Create a Histogram with a Box Plot on top (Marginal)
+                fig_dist = px.histogram(
+                    filtered_view,
+                    x="price",
+                    nbins=60,  # More bins for detail
+                    marginal="box",  # Adds the Box Plot at the top
+                    title="<b>Distribution of Food Prices</b> (PHP)",
+                    labels={'price': 'Price (PHP)', 'count': 'Frequency'},
+                    color_discrete_sequence=['#537B2F'],  # Your Primary Green
+                    opacity= 1  # Slight transparency
+                )
+
+                # Apply the "Glass/Clean" Theme to the Chart
+                fig_dist.update_layout(
+                    plot_bgcolor="#FFFFFF",  # <--- Solid White Plot Area
+                    paper_bgcolor="#FFFFFF",  # <--- Solid White Surrounding Area
+                    bargap=0.2,  # Spacing between bars
+                    font=dict(color="#2D5128"),  # Dark Green font
+                    title_font_size=18,
+
+                    # Clean up the Axes
+                    xaxis=dict(
+                        showgrid=False,
+                        title_font=dict(size=14, weight='bold')
+                    ),
+                    yaxis=dict(
+                        showgrid=True,
+                        gridcolor='rgba(128,128,128,0.2)',  # Faint grid lines
+                        title_font=dict(size=14, weight='bold')
+                    ),
+                    showlegend=False,
+                    margin = dict(l=20, r=20, t=50, b=20),
+                )
+
+                # Custom Hover Template
+                fig_dist.update_traces(
+                    hovertemplate="<b>Price:</b> ₱%{x:.2f}<br><b>Count:</b> %{y}"
+                )
+
+                st.plotly_chart(fig_dist, use_container_width=True)
+
+                st.caption(
+                    f"ℹ️ **Note:** The chart focuses on the main cluster of prices (0 - ₱{filter_limit:,.0f}). Extreme outliers (top 5%) are excluded for clarity.")
+
+                # --- TAB 3: MEET THE TEAM (Pure Streamlit) ---
+                with tab_team:
+                    st.subheader("1. Development Team")
+                    st.write("This project is a collaborative effort by the following members:")
+
+                    # 1. Define Team Data
+                    # Note: For images, place files in 'assets/images/'.
+                    # If files don't exist, the code handles it gracefully.
+                    team = [
+                        {"name": "Julian Ramil Andales", "role": "Data Analyst", "photo": "julian.png"},
+                        {"name": "Nathanael Jedd del Castillo", "role": "Developer", "photo": "nate.png"},
+                        {"name": "Sherielyn Guadiana", "role": "Data Analyst", "photo": "sherielyn.png"},
+                        {"name": "Kyle Plando", "role": "Data Analyst", "photo": "kyle.png"},
+                        {"name": "Shervin Dale Tabernero", "role": "Developer", "photo": "shervin.png"},
+                    ]
+
+                    # 2. Create Layout (5 Columns)
+                    cols = st.columns(len(team))
+
+                    # 3. Render Cards
+                    for i, member in enumerate(team):
+                        with cols[i]:
+                            # Create a Card Container with a border
+                            with st.container(border=True):
+                                # PROFILE PICTURE
+                                # Construct the path relative to the root folder
+                                image_path = f"assets/images/{member['photo']}"
+
+                                # Load the local image
+                                # We use width="stretch" to fix the warning and fill the circle
+                                st.image(image_path, width="stretch")
+
+                                # NAME & ROLE
+                                st.markdown(f"**{member['name']}**")
+                                st.caption(member['role'])
+
+                    st.divider()
+
+                    # 4. Academic Context Section
+                    st.subheader("2. Academic Context")
+
+                    # Create a styled container for Academic Info
+                    with st.container(border=True):
+                        c1, c2 = st.columns([1, 2])
+
+                        with c1:
+                            st.info(" **Course Subject**")
+                            st.write("CS365 - Data Analytics and Visualization")
+
+                            st.success(" **Institution**")
+                            st.write("Cebu Institute of Technology - University")
+
+                        with c2:
+                            st.markdown("### Implementation Scope")
+                            st.write(
+                                "This project serves as the comprehensive implementation of all concepts taught in CS365. It demonstrates the full data pipeline: Extraction, Cleaning, Analysis, and Interactive Visualization.")
+
+                            st.markdown("###  Skills Leveraged")
+                            st.write(
+                                "The team has incorporated learned skills from the course (Pandas, Plotly, Streamlit) alongside self-taught advanced techniques in CSS styling, software architecture, and geospatial mapping.")
+
+                    st.divider()
 
         # --- SECTION 3: CLEANING STEPS (EXPANDER) ---
         st.divider()

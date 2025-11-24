@@ -220,3 +220,90 @@ button[data-baseweb="tab"][aria-selected="true"] div p {
         background-color: rgba(83, 123, 47, 0.3) !important;
     }
 }
+
+/* =================================================================================
+   6. CARD HOVER EFFECTS (INTERACTIVITY)
+   ================================================================================= */
+
+/* 1. Define the Transition (Make it smooth) */
+div[data-testid="stMetric"],
+div[data-testid="stDataFrame"],
+div[data-testid="stTable"],
+.streamlit-expanderHeader {
+    transition: all 0.3s ease-in-out !important; /* Smooth animation speed */
+}
+
+/* 2. The Hover Action (Lift up + Shadow + Glow) */
+div[data-testid="stMetric"]:hover,
+div[data-testid="stDataFrame"]:hover,
+div[data-testid="stTable"]:hover {
+    transform: translateY(-5px) scale(1.01) !important; /* Move up 5px and grow slightly */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2) !important; /* Deeper shadow for 3D effect */
+    border-color: #537B2F !important; /* Highlight border with Primary Green */
+    z-index: 10; /* Ensure it floats above other elements */
+}
+
+/* 3. Special Hover for Expanders */
+.streamlit-expanderHeader:hover {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #537B2F !important;
+    border-color: #537B2F !important;
+}
+
+/* --- DARK MODE HOVER OVERRIDES --- */
+@media (prefers-color-scheme: light) {
+    div[data-testid="stMetric"]:hover,
+    div[data-testid="stDataFrame"]:hover {
+        background-color: rgba(45, 81, 40, 0.8) !important; /* Make card less transparent on hover */
+        border-color: #E4EB9C !important; /* Highlight with Light Green */
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5) !important; /* Stronger dark shadow */
+    }
+
+    .streamlit-expanderHeader:hover {
+        background-color: rgba(45, 81, 40, 0.9) !important;
+        color: #E4EB9C !important;
+    }
+}
+
+/* =================================================================================
+   8. TEAM TAB STYLING (PURE STREAMLIT WIDGETS)
+   ================================================================================= */
+
+/* A. Target the Bordered Containers (The Cards) */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* B. Hover Effect for the Containers */
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    transform: translateY(-8px);          /* Moves up */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Adds Shadow */
+    border-color: #537B2F;                /* Green Border on Hover */
+}
+
+/* C. Target the Images to make them Round */
+/* This selects images inside the column layout */
+div[data-testid="stImage"] img {
+    border-radius: 50% !important;        /* Circle Shape */
+    border: 3px solid #537B2F;            /* Green Ring */
+    padding: 3px;                         /* Space between image and ring */
+    transition: transform 0.3s ease;
+}
+
+/* D. Image Hover Effect */
+div[data-testid="stImage"] img:hover {
+    transform: scale(1.05);               /* Slight zoom on image */
+}
+
+/* E. Text Alignment for the Cards */
+/* We target the markdown inside the vertical block to center it */
+div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stMarkdown"] {
+    text-align: center;
+}
+
+/* F. Fix for Academic Section (To prevent it from being a circle) */
+/* Since we used a container for Academic too, we want to reset the image style if there are images there
+   (though currently there are none, this is safety code) */

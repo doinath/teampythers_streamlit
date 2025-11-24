@@ -41,25 +41,80 @@ class DataPrepPage:
                 st.success("✅ No missing values found! The dataset has been cleaned by the DataManager pipeline.")
 
         with col2:
+            # Common style settings for consistent look
+            common_layout = dict(
+                plot_bgcolor="#FFFFFF",
+                paper_bgcolor="#FFFFFF",
+                font=dict(color="#2D5128"),  # Dark Green Text
+                title_font=dict(size=18, weight='bold', color="#537B2F"),
+                margin=dict(l=20, r=20, t=50, b=20),
+            )
+
             if not missing.empty:
-                # Visualization of completeness
+                # --- OPTION A: MISSING DATA BAR CHART ---
                 fig = px.bar(
                     x=missing.index,
                     y=missing.values,
-                    labels={'x': 'Columns', 'y': 'Null Count'},
-                    title="Data Gap Analysis",
-                    color=missing.values,
-                    color_continuous_scale='Reds'
+                    labels={'x': 'Column Name', 'y': 'Missing Rows'},
+                    title="⚠️ Data Gap Analysis",
+                    text=missing.values  # Show numbers on top of bars
                 )
+
+                # Apply Theme Styling
+                fig.update_traces(
+                    marker_color='#E57373',  # A soft red/salmon that complements green
+                    marker_line_color='#D32F2F',
+                    marker_line_width=1.5,
+                    textposition='outside'
+                )
+
+                fig.update_layout(
+                    **common_layout,
+                    xaxis=dict(showgrid=False, title=None),
+                    yaxis=dict(showgrid=True, gridcolor='rgba(0,0,0,0.05)'),
+                )
+
                 st.plotly_chart(fig, use_container_width=True)
+
             else:
-                # Show a "Perfect Score" chart if data is clean
-                st.info("Visualizing Clean Data Integrity:")
-                dummy_data = pd.DataFrame({'Status': ['Filled', 'Missing'], 'Count': [len(df), 0]})
-                fig = px.pie(dummy_data, names='Status', values='Count',
-                             color='Status',
-                             color_discrete_map={'Filled': '#2E8B57', 'Missing': 'red'},
-                             hole=0.6)
+                # --- OPTION B: CLEAN DATA DONUT CHART ---
+                st.info("Visualizing Data Integrity:")
+
+                # Create dummy data for the chart
+                dummy_data = pd.DataFrame({
+                    'Status': ['Filled Data', 'Missing'],
+                    'Count': [100, 0]
+                })
+
+                fig = px.pie(
+                    dummy_data,
+                    names='Status',
+                    values='Count',
+                    hole=0.7,  # Make it a thin donut
+                    title="<b>Dataset Health Score</b>",
+                    color='Status',
+                    color_discrete_map={
+                        'Filled Data': '#537B2F',  # Primary Green
+                        'Missing': '#E0E0E0'
+                    }
+                )
+
+                # Add "100%" Text in the middle
+                fig.update_layout(
+                    **common_layout,
+                    showlegend=False,
+                    annotations=[dict(
+                        text='100%<br>CLEAN',
+                        x=0.5, y=0.5,
+                        font_size=24,
+                        font_weight='bold',
+                        showarrow=False,
+                        font_color='#537B2F'
+                    )]
+                )
+
+                fig.update_traces(hoverinfo='label+percent')
+
                 st.plotly_chart(fig, use_container_width=True)
 
         st.info(

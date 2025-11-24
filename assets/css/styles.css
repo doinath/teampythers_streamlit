@@ -2,14 +2,14 @@
    1. GLOBAL VARIABLES & PALETTES
    ================================================================================= */
 
-/* --- LIGHT THEME (DEFAULT) --- */
+ /*--- LIGHT THEME (DEFAULT) ---*/
 :root {
     /* Palette: #537B2F (Primary), #8DA750 (Mid), #E4EB9C (Light) */
 
     /* Backgrounds */
     --main-bg-gradient: linear-gradient(130deg, #537B2F 0%, #E4EB9C 70%);
 
-/* Sidebar: Fades from Mid Green to Light Green */
+/* Sidebar: Fades from Mid Green to Light Green
 --sidebar-bg-gradient: linear-gradient(70deg, #142C14 0%, #537B2F 70%);
 
     /* Text Colors */

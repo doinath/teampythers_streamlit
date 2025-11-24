@@ -125,12 +125,12 @@ class OverviewPage:
                     # Clean up the Axes
                     xaxis=dict(
                         showgrid=False,
-                        title_font=dict(size=14, weight='bold')
+                        title_font=dict(size=14)
                     ),
                     yaxis=dict(
                         showgrid=True,
                         gridcolor='rgba(128,128,128,0.2)',  # Faint grid lines
-                        title_font=dict(size=14, weight='bold')
+                        title_font=dict(size=14)
                     ),
                     showlegend=False,
                     margin = dict(l=20, r=20, t=50, b=20),

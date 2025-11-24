@@ -2,27 +2,27 @@
    1. GLOBAL VARIABLES & PALETTES
    ================================================================================= */
 
-/* --- LIGHT THEME (DEFAULT) --- */
-/*:root {*/
-/*    !* Palette: #537B2F (Primary), #8DA750 (Mid), #E4EB9C (Light) *!*/
+ /*--- LIGHT THEME (DEFAULT) ---*/
+:root {
+    /* Palette: #537B2F (Primary), #8DA750 (Mid), #E4EB9C (Light) */
 
-/*    !* Backgrounds *!*/
-/*    --main-bg-gradient: linear-gradient(130deg, #537B2F 0%, #E4EB9C 70%);*/
+    /* Backgrounds */
+    --main-bg-gradient: linear-gradient(130deg, #537B2F 0%, #E4EB9C 70%);
 
-/*/* Sidebar: Fades from Mid Green to Light Green */
-/*--sidebar-bg-gradient: linear-gradient(70deg, #142C14 0%, #537B2F 70%);*/
+/* Sidebar: Fades from Mid Green to Light Green
+--sidebar-bg-gradient: linear-gradient(70deg, #142C14 0%, #537B2F 70%);
 
-/*    !* Text Colors *!*/
-/*    --text-main: #142C14;           !* Dark Jungle Green (High Contrast on Light BG) *!*/
-/*    --text-sidebar: #E4EB9C;        !* Light Green (High Contrast on Dark Sidebar) *!*/
-/*    --header-color: #2D5128;*/
+    /* Text Colors */
+    --text-main: #142C14;           /* Dark Jungle Green (High Contrast on Light BG) */
+    --text-sidebar: #E4EB9C;        /* Light Green (High Contrast on Dark Sidebar) */
+    --header-color: #2D5128;
 
-/*    !* Components *!*/
-/*    --card-bg: rgba(255, 255, 255, 0.85);*/
-/*    --card-border: #8DA750;*/
-/*    --metric-value: #2D5128;*/
-/*    --metric-label: #142C14;*/
-/*}*/
+    /* Components */
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: #8DA750;
+    --metric-value: #2D5128;
+    --metric-label: #142C14;
+}
 
 /* --- DARK THEME (SYSTEM OVERRIDE) --- */
 @media (prefers-color-scheme: light) {

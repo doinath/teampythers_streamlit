@@ -12,6 +12,11 @@ class OverviewPage:
     def render(self):
 
         self.inject_css('assets/css/overview.css')
+        with open("assets/css/overview.css") as f:
+            css = f.read()
+
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
         st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to Present")
 
@@ -155,9 +160,6 @@ class OverviewPage:
                     st.subheader("1. Development Team")
                     st.write("This project is a collaborative effort by the following members:")
 
-                    # 1. Define Team Data
-                    # Note: For images, place files in 'assets/images/'.
-                    # If files don't exist, the code handles it gracefully.
                     team = [
                         {"name": "Julian Ramil Andales", "role": "Data Analyst", "photo": "julian.png"},
                         {"name": "Nathanael Jedd del Castillo", "role": "Developer", "photo": "nate.png"},
@@ -166,9 +168,7 @@ class OverviewPage:
                         {"name": "Shervin Dale Tabernero", "role": "Developer", "photo": "shervin.png"},
                     ]
 
-                    with open("assets/css/overview.css") as f:
-                        css = f.read()
-                    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
                     cols = st.columns(len(team))
 
                     for i, member in enumerate(team):
@@ -199,8 +199,21 @@ class OverviewPage:
                     # 4. Academic Context Section
                     st.subheader("2. Academic Context")
 
+                    academic_container = """
+                    <style>
+                    .st-key-my-styled-container {
+                        /* Set the background color here */
+                        background-color: #f5f5f5;  
+                        border-radius: 10px;        /* Optional: for rounded corners */
+                        padding: 10px;              /* Optional: for spacing inside the container */
+                    }
+                    </style>
+                    """
+
+                    st.markdown(academic_container, unsafe_allow_html=True)
                     # Create a styled container for Academic Info
-                    with st.container(border=True):
+                    with st.container(border=True, key='my-styled-container'):
+
                         c1, c2 = st.columns([1, 2])
 
                         with c1:

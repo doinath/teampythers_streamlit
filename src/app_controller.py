@@ -3,7 +3,6 @@ import os
 
 # Import the Data Manager
 from src.data_manager import DataManager
-
 # Import UI Pages
 # Note: Ensure these files exist in src/pages/ with the corresponding class names
 from src.pages import overview_01, data_prep_02, analysis_03, conclusions_04
@@ -33,14 +32,13 @@ class StreamlitApp:
         }
 
     def run(self):
-        """
-        The main execution method.
-        Sets up the styling, sidebar, and renders the selected page.
-        """
-
-        # Inject Custom CSS
-        # Adjusted path to match your structure: assets/css/styles.css
+        # Inject CSS
         self.inject_css('assets/css/styles.css')
+        self.inject_css('assets/css/app_controller.css')
+
+        # Initialize session state for current page
+        if "current_page" not in st.session_state:
+            st.session_state.current_page = "01 Overview"
 
         # Sidebar Navigation
         with st.sidebar:
@@ -48,18 +46,29 @@ class StreamlitApp:
             st.caption("Philippine Food Price Analysis")
             st.markdown("---")
 
-            # Using radio button for cleaner navigation look
-            selection = st.radio(
-                "Go to Section",
-                list(self.pages.keys()),
-                index=0
-            )
+            st.markdown('**Go to Section**')
+
+            for page_key in self.pages.keys():
+
+                curr = (st.session_state.current_page == page_key)
+
+                if st.button(
+                    page_key,
+                    key=f'nav_{page_key}',
+                    type='primary' if curr else 'secondary',
+                    use_container_width=True,
+                    on_click=self.set_page,
+                    args=(page_key,)
+                ):
+                    st.session_state.current_page = page_key
 
             st.markdown("---")
             st.info("Data Source: WFP (2000-Present)")
 
-        # Render the selected page
-        page = self.pages[selection]
+        # Determine which page to render
+        page = self.pages[st.session_state.current_page]
+
+        # Render it
         page.render()
 
     def inject_css(self, css_file_path):
@@ -76,3 +85,6 @@ class StreamlitApp:
 
         except Exception as e:
             st.error(f"Error loading CSS: {e}")
+
+    def set_page(self, page_key):
+        st.session_state.current_page = page_key

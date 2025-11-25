@@ -1,7 +1,7 @@
 # requirements.txt
 
 # --- Core Application and Data Handling ---
-streamlit>=1.30.0    # The main framework for the UI
+streamlit>=1.37.0    # The main framework for the UI
 pandas>=2.0.0        # Essential for all data loading and manipulation (Data Manager)
 numpy>=1.26.0        # Core library for numerical operations, used by pandas and sklearn
 

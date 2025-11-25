@@ -1,0 +1,104 @@
+/*!*!* --- 1. SET THE GLOBAL PAGE BACKGROUND COLOR (OPTIONAL) --- *!*!*/
+/*!*!* This is based on the light green theme in your image *!*!*/
+/*!*.stApp {*!*/
+/*!*    background-color: #f0fff0; !* Very light, almost white green (Honeydew) *!*!*/
+/*!*}*!*/
+
+/*!*!* --- 2. STYLE THE MAIN COLUMN CONTAINERS (The rounded light-green card background) --- *!*!*/
+/*!*!* This targets the horizontal block of columns and applies the card styling to each one. *!*!*/
+/*!*[data-testid="stHorizontalBlock"] > div[data-testid="stVerticalBlock"] {*!*/
+/*!*    !* Main card background color (the light green color surrounding the content) *!*!*/
+/*!*    background-color: #e6ffe6;*!*/
+/*!*    border-radius: 15px;*!*/
+/*!*    padding: 20px;*!*/
+/*!*    margin: 10px 0;           !* Vertical spacing between rows of cards *!*!*/
+/*!*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);*!*/
+/*!*}*!*/
+
+/*!*!* --- 3. TARGET THE WHITE RECTANGLE ABOVE THE IMAGE --- *!*!*/
+/*!*!* This is a "Streamlit hack" that targets the first element (a div) within the column's vertical content block.*!*/
+/*!*   This div is often used to establish the context for content inside the column. *!*!*/
+/*!*[data-testid="stVerticalBlock"] > div:nth-child(1) {*!*/
+/*!*    !* Set the distinct color for the rectangle above the image *!*!*/
+/*!*    background-color: #c8e6c9; !* A medium light green *!*!*/
+/*!*    border-radius: 8px; !* Slightly less rounded *!*!*/
+/*!*    padding: 10px;*!*/
+/*!*    height: 30px; !* Adjust this height to control the bar's size *!*!*/
+/*!*    margin-bottom: 20px; !* Creates space between this bar and the image *!*!*/
+/*!*}*!*/
+
+/*!*!* --- 4. STYLE THE IMAGE TO MAKE IT LOOK CIRCULAR --- *!*!*/
+/*!*!* This targets the st.image element's container to force a circular mask. *!*!*/
+/*!*div[data-testid="stImage"] {*!*/
+/*!*    !* Center the image container *!*!*/
+/*!*    display: flex;*!*/
+/*!*    justify-content: center;*!*/
+/*!*}*!*/
+
+/*!*div[data-testid="stImage"] img {*!*/
+/*!*    !* Make the image circular *!*!*/
+/*!*    border-radius: 50%;*!*/
+/*!*    !* Ensure the image container doesn't have its own background color *!*!*/
+/*!*    background-color: transparent !important;*!*/
+/*!*    !* Optional: Add a subtle border to the image *!*!*/
+/*!*    border: 3px solid #388e3c;*!*/
+/*!*}*!*/
+
+/*!* --- 1. GENERAL CARD STYLING --- *!*/
+/*!*.team-member-card {*!*/
+/*!*    !* Background color of the card/container itself *!*!*/
+/*!*    background-color: #f7fff7; !* Very light green *!*!*/
+
+/*!*    !* 🟢 ADD THE BORDER HERE!*!*/
+/*!*       Syntax: [width] [style] [color] *!*!*/
+/*!*    border: 2px solid #388e3c; !* 2px wide, solid line, dark green color *!*!*/
+
+/*!*    !* Border and Corner style *!*!*/
+/*!*    border-radius: 12px;*!*/
+
+/*!*    !* Internal spacing *!*!*/
+/*!*    padding: 15px;*!*/
+
+/*!*    !* Optional: Subtle shadow for depth *!*!*/
+/*!*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);*!*/
+
+/*!*    !* Ensure the card content is centered *!*!*/
+/*!*    text-align: center;*!*/
+/*!*}*!*/
+
+/*!* --- 1. CARD CONTAINER (The main body of the card) --- *!*/
+.team-member-card {
+    background-color: #f7fff7 !important; /* light background */
+    border: 2px solid #388e3c !important; /* dark green border */
+    border-radius: 12px !important;
+    padding: 15px !important;
+    text-align: center !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    /* margin-bottom should be handled by the outer column styles, but include if needed */
+}
+
+.team-card {
+ background: #f5f5f5;
+ padding: 20px;
+ border-radius: 15px;
+ text-align: center;
+ box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+}
+
+.team-card img {
+ width: 140px;
+ height: 140px;
+ object-fit: cover;
+ border-radius: 50%;
+ border: 4px solid #4CAF50;
+ margin-bottom: 10px;
+}
+.team-name {
+ font-size: 16px;
+ font-weight: 700;
+ margin-top: 5px;
+}
+.team-role {font-size: 14px;
+ color: #555;
+ margin-top: -5px;
+}

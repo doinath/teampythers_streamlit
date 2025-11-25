@@ -1,13 +1,17 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-
+import base64
+import os
+from pathlib import Path
 
 class OverviewPage:
     def __init__(self, data_manager):
         self.dm = data_manager
 
     def render(self):
+
+        self.inject_css('assets/css/overview.css')
         st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to Present")
 
@@ -162,25 +166,33 @@ class OverviewPage:
                         {"name": "Shervin Dale Tabernero", "role": "Developer", "photo": "shervin.png"},
                     ]
 
-                    # 2. Create Layout (5 Columns)
+                    with open("assets/css/overview.css") as f:
+                        css = f.read()
+                    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
                     cols = st.columns(len(team))
 
-                    # 3. Render Cards
                     for i, member in enumerate(team):
                         with cols[i]:
-                            # Create a Card Container with a border
-                            with st.container(border=True):
-                                # PROFILE PICTURE
-                                # Construct the path relative to the root folder
-                                image_path = f"assets/images/{member['photo']}"
+                            file_path = f"assets/images/{member['photo']}"
 
-                                # Load the local image
-                                # We use width="stretch" to fix the warning and fill the circle
-                                st.image(image_path, width="stretch")
+                            # 2. Check and Encode the image
+                            base64_src = ""  # Initialize fallback
+                            if os.path.exists(file_path):
+                                with open(file_path, "rb") as image_file:
+                                    encoded_string = base64.b64encode(image_file.read()).decode()
 
-                                # NAME & ROLE
-                                st.markdown(f"**{member['name']}**")
-                                st.caption(member['role'])
+                                # Define the data URL structure
+                                # NOTE: If your image is a JPG, change 'image/png' to 'image/jpeg'
+                                base64_src = f"data:image/png;base64,{encoded_string}"
+
+                            card_html = f"""
+                                <div class="team-card">
+                                    <img src="{base64_src}" alt="{member['name']}'s photo">
+                                    <div class="team-name">{member['name']}</div>
+                                    <div class="team-role">{member['role']}</div>
+                                </div>
+                                """
+                            st.markdown(card_html, unsafe_allow_html=True)
 
                     st.divider()
 
@@ -221,3 +233,11 @@ class OverviewPage:
             4. **Categorical Imputation:** Missing values in text columns (e.g., `market`) were filled with the placeholder "Unknown".
             5. **Data Type Enforcement:** Ensured `price` is float and `date` is datetime.
             """)
+
+    def inject_css(self, file_name):
+        """Loads a local CSS file and injects it into the Streamlit app."""
+        try:
+            with open(file_name) as f:
+                st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        except FileNotFoundError:
+            st.error(f"Error: Could not find '{file_name}'. Ensure it is in the root directory.")

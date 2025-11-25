@@ -18,8 +18,6 @@ class StreamlitApp:
             initial_sidebar_state="expanded"
         )
 
-
-
         # 2. Initialize Data Manager (The Model)
         # Using the specific file name you provided
         self.data_manager = DataManager('data/wfp_food_prices_phl.csv')

@@ -8,21 +8,21 @@ details to be added.
 to be improved... or changed
 ```angular2html
 teampythers_streamlit/
-├── .gitignore                # Tells Git to ignore files like venv/ and notes/
-├── .streamlit/               # Streamlit configuration directory (not in our project)
-│   └── secrets.toml          # For API keys and credentials (not in our project)
-├── assets/                   # For static resources like CSS and images
-│   └── style.css             # Your custom styling for the app
-├── data/                     # Data storage directory
-│   └── dataset.csv           # Your primary project dataset file
-├── src/                      # Source code package (All Python logic lives here)
-│   ├── pages/                # Sub-package for all UI/View classes
-│   │   ├── overview_01.py    #
-    │   ├── data_prep_02.py   #
-│   ├── app_controller.py     # StreamlitApp Class (The Controller: Handles state and navigation)
-│   └── data_manager.py       # DataManager Class (The Model: Handles data loading, cleaning, and transformation)
-├── app.py                    # Minimal entry point (The Runner: Starts the application)
-└── requirements.txt          # List of Python dependencies (streamlit, pandas, plotly, etc.)
+├── .gitignore                            # Tells Git to ignore files like venv/ and notes/
+├── .streamlit/                           # Streamlit configuration directory (not in our project)
+│   └── secrets.toml                      # For API keys and credentials (not in our project)
+├── assets/                               # For static resources like CSS and images
+│   └── style.css                         # Your custom styling for the app
+├── data/                                 # Data storage directory
+│   └── wfp_food_prices_phl.csv           # Your primary project dataset file
+├── src/                                  # Source code package (All Python logic lives here)
+│   ├── pages/                            # Sub-package for all UI/View classes
+│   │   ├── overview_01.py                #
+│   │   ├── data_prep_02.py               #
+│   ├── app_controller.py                 # StreamlitApp Class (The Controller: Handles state and navigation)
+│   └── data_manager.py                   # DataManager Class (The Model: Handles data loading, cleaning, and transformation)
+├── app.py                                # Minimal entry point (The Runner: Starts the application)
+└── requirements.txt                      # List of Python dependencies (streamlit, pandas, plotly, etc.)
 ```
 ### Development Team
 

@@ -80,6 +80,18 @@ class OverviewPage:
             st.subheader("Raw Data Sample")
             st.dataframe(df.head(10), use_container_width=True)
 
+            st.divider()
+            with st.expander("🛠️ Technical Details: Data Cleaning Pipeline"):
+                st.markdown("""
+                        The following steps were automated in the `DataManager` class using `sklearn.pipeline`:
+
+                        1. **Date Parsing:** Converted `date` column to datetime objects; rows with invalid dates were dropped.
+                        2. **Feature Engineering:** Extracted `year`, `quarter`, and `month_name` for temporal analysis.
+                        3. **Numerical Imputation:** Missing values in `price`, `latitude`, and `longitude` were filled using the **Median** strategy (robust against outliers).
+                        4. **Categorical Imputation:** Missing values in text columns (e.g., `market`) were filled with the placeholder "Unknown".
+                        5. **Data Type Enforcement:** Ensured `price` is float and `date` is datetime.
+                        """)
+
         # --- TAB 2: DATA HEALTH (Visualizations & Missing Data) ---
         with tab_health:
             st.subheader("1. Missing Data Analysis")
@@ -232,18 +244,7 @@ class OverviewPage:
 
                     st.divider()
 
-        # --- SECTION 3: CLEANING STEPS (EXPANDER) ---
-        st.divider()
-        with st.expander("🛠️ Technical Details: Data Cleaning Pipeline"):
-            st.markdown("""
-            The following steps were automated in the `DataManager` class using `sklearn.pipeline`:
 
-            1. **Date Parsing:** Converted `date` column to datetime objects; rows with invalid dates were dropped.
-            2. **Feature Engineering:** Extracted `year`, `quarter`, and `month_name` for temporal analysis.
-            3. **Numerical Imputation:** Missing values in `price`, `latitude`, and `longitude` were filled using the **Median** strategy (robust against outliers).
-            4. **Categorical Imputation:** Missing values in text columns (e.g., `market`) were filled with the placeholder "Unknown".
-            5. **Data Type Enforcement:** Ensured `price` is float and `date` is datetime.
-            """)
 
     def inject_css(self, file_name):
         """Loads a local CSS file and injects it into the Streamlit app."""

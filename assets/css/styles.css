@@ -98,13 +98,13 @@ div[data-testid="stMetricValue"] {
     color: var(--metric-value) !important;
 }
 
-/* 2. Tables & DataFrames */
-/*div[data-testid="stDataFrame"], div[data-testid="stTable"] {*/
-/*    background-color: var(--card-bg);*/
-/*    border: 1px solid var(--card-border);*/
-/*    border-radius: 8px;*/
-/*    padding: 5px;*/
-/*}*/
+/*2. Tables & DataFrames*/
+div[data-testid="stDataFrame"], div[data-testid="stTable"] {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 5px;
+}
 
 /* 3. Header/Navbar (Transparent) */
 header[data-testid="stHeader"] {
@@ -164,7 +164,7 @@ section[data-testid="stSidebar"] div[data-testid="stRadio"] div[role="radiogroup
 
 /* E. Info/Alert Box */
 section[data-testid="stSidebar"] div[data-testid="stAlert"] {
-    background-color: #8DA750 !important; /* Darker transparent bg */
+    /*background-color: #8DA750 !important; !* Darker transparent bg *!*/
     border: 0px solid #8DA750 !important;
     color: #E4EB9C !important;
     font-size: 0.9rem !important;
@@ -202,7 +202,7 @@ button[data-baseweb="tab"] div p {
 /* 4. The Active (Selected) Tab */
 button[data-baseweb="tab"][aria-selected="true"] {
     background-color: var(--card-bg) !important; /* Matches your card glass effect */
-    border: 5px solid var(--card-border) !important;
+    /*border: 3px solid var(--card-border) !important;*/
     box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
 }
 

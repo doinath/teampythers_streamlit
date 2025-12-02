@@ -176,50 +176,50 @@ section[data-testid="stSidebar"] div[data-testid="stAlert"] {
    ================================================================================= */
 
 /* 1. The Tab Container */
-div[data-baseweb="tab-list"] {
-    gap: 10px; /* Adds space between tabs */
-}
+/*div[data-baseweb="tab-list"] {*/
+/*    gap: 10px; !* Adds space between tabs *!*/
+/*}*/
 
 /* 2. The Tab Buttons (Unselected) */
-button[data-baseweb="tab"] {
-    background-color: rgba(255, 255, 255, 0.2) !important; /* Subtle background */
-    border-radius: 8px !important;
-    border: 1px solid transparent !important;
-    padding: 10px 20px !important;
-    transition: all 0.3s ease !important;
-}
+/*button[data-baseweb="tab"] {*/
+/*    background-color: rgba(255, 255, 255, 0.2) !important; !* Subtle background *!*/
+/*    border-radius: 8px !important;*/
+/*    border: 1px solid transparent !important;*/
+/*    padding: 10px 20px !important;*/
+/*    transition: all 0.3s ease !important;*/
+/*}*/
 
-/* 3. The Text Inside the Tabs */
-button[data-baseweb="tab"] div p {
-    font-weight: 800 !important;      /* Make it BOLD */
-    font-size: 1.1rem !important;     /* Make it slightly Bigger */
-    color: var(--header-color) !important; /* Uses your Theme Green */
-    text-shadow: 0px 0px 1px rgba(0,0,0,0.1);
-}
+/*!* 3. The Text Inside the Tabs *!*/
+/*button[data-baseweb="tab"] div p {*/
+/*    font-weight: 800 !important;      !* Make it BOLD *!*/
+/*    font-size: 1.1rem !important;     !* Make it slightly Bigger *!*/
+/*    color: var(--header-color) !important; !* Uses your Theme Green *!*/
+/*    text-shadow: 0px 0px 1px rgba(0,0,0,0.1);*/
+/*}*/
 
-/* 4. The Active (Selected) Tab */
-button[data-baseweb="tab"][aria-selected="true"] {
-    background-color: var(--card-bg) !important; /* Matches your card glass effect */
-    border: 1px solid var(--card-border) !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
-}
+/*!* 4. The Active (Selected) Tab *!*/
+/*button[data-baseweb="tab"][aria-selected="true"] {*/
+/*    background-color: var(--card-bg) !important; !* Matches your card glass effect *!*/
+/*    border: 1px solid var(--card-border) !important;*/
+/*    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;*/
+/*}*/
 
-/* 5. Text Color for Active Tab */
-button[data-baseweb="tab"][aria-selected="true"] div p {
-    color: #537B2F !important; /* Forces the Primary Green */
-}
+/*!* 5. Text Color for Active Tab *!*/
+/*button[data-baseweb="tab"][aria-selected="true"] div p {*/
+/*    color: #537B2F !important; !* Forces the Primary Green *!*/
+/*}*/
 
-/* --- DARK MODE SPECIFIC --- */
-@media (prefers-color-scheme: light) {
-    /* Make text lighter in dark mode so it stands out */
-    button[data-baseweb="tab"] div p {
-        color: #E4EB9C !important; /* Lightest Green */
-    }
+/*!* --- DARK MODE SPECIFIC --- *!*/
+/*@media (prefers-color-scheme: light) {*/
+/*    !* Make text lighter in dark mode so it stands out *!*/
+/*    button[data-baseweb="tab"] div p {*/
+/*        color: #E4EB9C !important; !* Lightest Green *!*/
+/*    }*/
 
-    button[data-baseweb="tab"][aria-selected="true"] {
-        background-color: rgba(83, 123, 47, 0.3) !important;
-    }
-}
+/*    button[data-baseweb="tab"][aria-selected="true"] {*/
+/*        background-color: rgba(83, 123, 47, 0.3) !important;*/
+/*    }*/
+/*}*/
 
 /* =================================================================================
    6. CARD HOVER EFFECTS (INTERACTIVITY)

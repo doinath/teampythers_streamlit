@@ -3,6 +3,8 @@
 /*    border-bottom: 3px solid #FF4B4B !important; !* <--- THIS IS THE LINE! *!*/
 /*}*/
 
+
+/* team card */
 .team-member-card {
     background-color: #f7fff7 !important; /* light background */
     border: 2px solid #388e3c !important; /* dark green border */
@@ -20,11 +22,10 @@
      text-align: center;
      box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
      transition: transform 0.5s ease;
-    height: 300px;
+    height: 280px;
 }
 
 .team-card:hover {
-
     transform: scale(1.05);
 }
 
@@ -37,15 +38,16 @@
      margin-bottom: 10px;
 }
 .team-name {
- font-size: 16px;
- font-weight: 700;
- margin-top: 5px;
-    padding: 15px;
+    font-size: 16px;
+    font-weight: 700;
 
+    height: 15px;
 }
-.team-role {font-size: 14px;
- color: #555;
- margin-top: -10px;
+
+.team-role {
+    font-size: 14px;
+    margin-top: 40px;
+    color: #555;
 }
 
 .my-styled-container {

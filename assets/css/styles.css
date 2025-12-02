@@ -99,12 +99,12 @@ div[data-testid="stMetricValue"] {
 }
 
 /* 2. Tables & DataFrames */
-div[data-testid="stDataFrame"], div[data-testid="stTable"] {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 5px;
-}
+/*div[data-testid="stDataFrame"], div[data-testid="stTable"] {*/
+/*    background-color: var(--card-bg);*/
+/*    border: 1px solid var(--card-border);*/
+/*    border-radius: 8px;*/
+/*    padding: 5px;*/
+/*}*/
 
 /* 3. Header/Navbar (Transparent) */
 header[data-testid="stHeader"] {
@@ -265,45 +265,3 @@ div[data-testid="stTable"]:hover {
     }
 }
 
-/* =================================================================================
-   8. TEAM TAB STYLING (PURE STREAMLIT WIDGETS)
-   ================================================================================= */
-
-/* A. Target the Bordered Containers (The Cards) */
-div[data-testid="stVerticalBlockBorderWrapper"] {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 15px;
-    transition: all 0.3s ease-in-out;
-}
-
-/* B. Hover Effect for the Containers */
-div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    transform: translateY(-8px);          /* Moves up */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Adds Shadow */
-    border-color: #537B2F;                /* Green Border on Hover */
-}
-
-/* C. Target the Images to make them Round */
-/* This selects images inside the column layout */
-div[data-testid="stImage"] img {
-    border-radius: 50% !important;        /* Circle Shape */
-    border: 3px solid #537B2F;            /* Green Ring */
-    padding: 3px;                         /* Space between image and ring */
-    transition: transform 0.3s ease;
-}
-
-/* D. Image Hover Effect */
-div[data-testid="stImage"] img:hover {
-    transform: scale(1.05);               /* Slight zoom on image */
-}
-
-/* E. Text Alignment for the Cards */
-/* We target the markdown inside the vertical block to center it */
-div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stMarkdown"] {
-    text-align: center;
-}
-
-/* F. Fix for Academic Section (To prevent it from being a circle) */
-/* Since we used a container for Academic too, we want to reset the image style if there are images there
-   (though currently there are none, this is safety code) */

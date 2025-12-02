@@ -35,6 +35,7 @@ class StreamlitApp:
         # Inject CSS
         self.inject_css('assets/css/styles.css')
         self.inject_css('assets/css/app_controller.css')
+        self.inject_css('assets/css/overview.css')
 
         # Initialize session state for current page
         if "current_page" not in st.session_state:
@@ -65,22 +66,22 @@ class StreamlitApp:
             st.markdown("---")
             st.info("Data Source: WFP (2000-Present)")
 
-        # Determine which page to render
+
         page = self.pages[st.session_state.current_page]
 
-        # Render it
+
         page.render()
 
     def inject_css(self, css_file_path):
         """Helper function to load and inject custom CSS."""
         try:
-            # Check if file exists first to avoid crashing
+
             if os.path.exists(css_file_path):
                 with open(css_file_path, 'r') as f:
                     css_content = f.read()
                     st.markdown(f'<style>{css_content}</style>', unsafe_allow_html=True)
             else:
-                # Warning instead of error so the app still runs without styles
+
                 st.warning(f"⚠️ CSS file not found at: {css_file_path}")
 
         except Exception as e:

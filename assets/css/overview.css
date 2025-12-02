@@ -1,3 +1,40 @@
+/*div.stTabs > tabs {*/
+/*    border: none !important;*/
+/*    outline: none !important;*/
+/*    box-shadow: none !important;*/
+/*}*/
+
+/*div.stTabs > tabs:focus {*/
+/*    border: none !important;*/
+/*    outline: none !important;*/
+/*    box-shadow: none !important;*/
+/*}*/
+
+.stTabs [aria-selected="true"] {
+    /* ... other styles ... */
+    border-bottom: 3px solid #FF4B4B important; /* <--- THIS IS THE LINE! */
+}
+
+/*.stTabs [data-baseweb="tab-panel"] hr {*/
+/*    display: none !important;*/
+/*}*/
+
+/*.custom-banner {*/
+/*    border-bottom: none !important;*/
+/*    border-image: none !important;*/
+/*}*/
+
+/*div.stTabs [data-baseweb="tab"] {*/
+/*    border: none !important;*/
+/*    outline: none !important;*/
+/*    box-shadow: none !important;*/
+/*}*/
+
+/*.stTabs > [data-baseweb="tab"]:focus {*/
+/*    border: none !important;*/
+/*    outline: none !important;*/
+/*    box-shadow: none !important;*/
+/*}*/
 /*!* --- 1. CARD CONTAINER (The main body of the card) --- *!*/
 .team-member-card {
     background-color: #f7fff7 !important; /* light background */

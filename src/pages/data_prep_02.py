@@ -9,7 +9,7 @@ class DataPrepPage:
         self.dm = data_manager
 
     def render(self):
-        st.title("🛠️ Data Exploration & Preparation")
+        st.title("Data Exploration & Preparation")
 
         df = self.dm.get_data()
 
@@ -43,7 +43,7 @@ class DataPrepPage:
                 st.write("Missing values count per column:")
                 st.dataframe(missing)
             else:
-                st.success("✅ No missing values found! The dataset has been cleaned by the DataManager pipeline.")
+                st.success(" No missing values found! The dataset has been cleaned by the DataManager pipeline.")
 
         with col2:
 
@@ -53,7 +53,7 @@ class DataPrepPage:
                     x=missing.index,
                     y=missing.values,
                     labels={'x': 'Column Name', 'y': 'Missing Rows'},
-                    title="⚠️ Data Gap Analysis",
+                    title=" Data Gap Analysis",
                     text=missing.values
                 )
 
@@ -115,7 +115,7 @@ class DataPrepPage:
                 st.plotly_chart(fig, use_container_width=True)
 
         st.info(
-            "ℹ️ **Cleaning Strategy:** Rows with missing dates were dropped. "
+            " **Cleaning Strategy:** Rows with missing dates were dropped. "
             "Numeric gaps (prices, coordinates) were filled using Median Imputation. "
             "Categorical gaps were marked as 'Unknown'."
         )
@@ -135,8 +135,6 @@ class DataPrepPage:
 
                 fig_comm.update_layout(
                     **common_layout,
-                    # FIX: Removed explicit 'title' argument to avoid "multiple values" error.
-                    # The title text is already set by px.pie, and the font is applied via **common_layout.
                 )
                 st.plotly_chart(fig_comm, use_container_width=True)
             else:

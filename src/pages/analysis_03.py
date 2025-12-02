@@ -375,6 +375,7 @@ def render_plando_analysis(dm):
         st.pyplot(fig_cluster, use_container_width=True)
         st.caption("Each point represents a region, grouped by similar average price and volatility.")
 
+
 def render_julian_analysis(dm):
     """Renders Julian's Apriori Association Rule Mining analysis."""
     st.header("3. 🔗 Apriori Association Rules")
@@ -382,12 +383,21 @@ def render_julian_analysis(dm):
     df_raw = dm.get_data().copy()
     df = _clean_data(df_raw.copy())
 
+    # Check if data is available and extract unique commodities
+    if df.empty:
+        st.error("Data not available.")
+        return
+
+    # Get the unique list of commodities for the dropdown
+    unique_commodities = sorted(df['commodity'].unique().tolist())
+
     # --- Controls for Apriori ---
     st.subheader("Rule Mining Parameters")
     colA, colB, colC = st.columns([1, 1, 1])
 
     with colA:
-        query = st.text_input("Commodity Query (e.g., 'Rice', 'Maize Flour'):", value='Rice', key='j_query')
+        # 🟢 FIX: Replaced st.text_input with st.selectbox
+        selected_commodity = st.selectbox("Commodity:", unique_commodities, key='j_commodity')
     with colB:
         min_support = st.slider("Minimum Support:", min_value=0.01, max_value=0.2, value=0.1, key='j_support')
     with colC:
@@ -398,13 +408,14 @@ def render_julian_analysis(dm):
     if st.button("Run Apriori Analysis"):
         st.markdown("### Association Rules Found (High Price Occurrences)")
 
-        # Run the cached Apriori analysis
-        results, info = _run_apriori_analysis(df, query, min_support, min_confidence)
+        # Run the cached Apriori analysis, passing the selected_commodity as the query
+        results, info = _run_apriori_analysis(df, selected_commodity, min_support, min_confidence)
 
         st.info(info)
 
         if not results:
-            st.warning("No rules found. Try adjusting the Commodity Query, lowering Support, or lowering Confidence.")
+            st.warning(
+                "No rules found. Try adjusting the Minimum Support, Minimum Confidence, or selecting a different Commodity.")
             return
 
         # Format and display results in a table
@@ -417,13 +428,11 @@ def render_julian_analysis(dm):
                 "Lift": f"{lift:.2f}"
             })
 
-        # FIX APPLIED HERE: Removed st.column_config entirely to avoid AttributeError.
         st.dataframe(
             pd.DataFrame(data_to_display),
             hide_index=True,
         )
         st.caption("Showing Top 10 Rules sorted by Lift.")
-
 
 # ==========================================
 # IV. ANALYSIS PAGE CLASS (DISPATCHER)

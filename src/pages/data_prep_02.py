@@ -157,8 +157,7 @@ class DataPrepPage:
                     showlegend=False,
                     xaxis_title="Count",
                     yaxis_title="Price Type",
-                    # FIX: Removed explicit 'title' argument to avoid "multiple values" error.
-                    # The title text is already set by px.bar, and the font is applied via **common_layout.
+
                 )
                 st.plotly_chart(fig_type, use_container_width=True)
             else:

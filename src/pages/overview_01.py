@@ -5,22 +5,22 @@ import base64
 import os
 from pathlib import Path
 
+
 class OverviewPage:
     def __init__(self, data_manager):
         self.dm = data_manager
 
     def render(self):
 
-        self.inject_css('assets/css/overview.css')
-        with open("assets/css/overview.css") as f:
-            css = f.read()
-
+        # 1. Inject CSS first (Using cached function to read file content once)
+        css = self._get_cached_css('assets/css/overview.css')
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+        # Note: The original inject_css function logic is now moved into the cached function.
 
-        st.title(" Philippine Food Price Analysis")
+        st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to 2023")
 
-        # Get the data from DataManager
+        # 2. Get the data from DataManager
         df = self.dm.get_data()
 
         # Check if data exists before trying to access columns
@@ -29,30 +29,29 @@ class OverviewPage:
             return
 
         # --- SECTION 1: TOP-LEVEL METRICS ---
-        # This gives the user an instant summary of the dataset's size
+        # Call the cached method with the fix: `self` is passed, but the function signature uses `_self`.
+        metrics = self._get_cached_metrics(df)
+
         c1, c2, c3, c4 = st.columns(4)
         with c1:
-            st.metric("Total Records", f"{len(df):,}")
+            st.metric("Total Records", f"{metrics['total_records']:,}")
         with c2:
-            st.metric("Commodities", df['commodity'].nunique())
+            st.metric("Commodities", metrics['commodities'])
         with c3:
-            st.metric("Regions", df['admin1'].nunique())
+            st.metric("Regions", metrics['regions'])
         with c4:
-            # Handle date min/max
-            min_year = df['year'].min()
-            max_year = df['year'].max()
-            st.metric("Time Span", f"{int(min_year)} - {int(max_year)}")
+            st.metric("Time Span", metrics['time_span'])
 
         st.divider()
 
-        tab_info, tab_health, tab_team = st.tabs(["Project & Data Dictionary", "Data Health & Distributions", "Meet the Team"])
+        tab_info, tab_health, tab_team = st.tabs(
+            ["Project & Data Dictionary", "Data Health & Distributions", "Meet the Team"])
 
         # --- TAB 1: PROJECT INFO ---
         with tab_info:
             st.subheader("Research Context")
             st.markdown("""
-            **Research Question:** 
-            *How have food prices in the Philippines evolved over the last two decades across different administrative regions, and what are the disparities between retail and wholesale markets?*
+            **Research Question:** *How have food prices in the Philippines evolved over the last two decades across different administrative regions, and what are the disparities between retail and wholesale markets?*
 
             **Analysis Techniques:**
             1. **Time-Series Analysis:** To track inflation and seasonal trends.
@@ -81,7 +80,7 @@ class OverviewPage:
             st.dataframe(df.head(10), use_container_width=True)
 
             st.divider()
-            with st.expander("🛠️ Technical Details: Data Cleaning Pipeline"):
+            with st.expander("Technical Details: Data Cleaning Pipeline"):
                 st.markdown("""
                         The following steps were automated in the `DataManager` class using `sklearn.pipeline`:
 
@@ -96,155 +95,172 @@ class OverviewPage:
         with tab_health:
             st.subheader("1. Missing Data Analysis")
 
-            # Calculate missing values (Checking the raw data before imputation would be ideal,
-            # but here we visualize the concept)
+            # Calculate missing values
             missing = df.isnull().sum()
             missing = missing[missing > 0]
 
             if not missing.empty:
                 st.warning("The following columns have missing values:")
-                fig_missing = px.bar(
-                    x=missing.index,
-                    y=missing.values,
-                    labels={'x': 'Column', 'y': 'Count of Nulls'},
-                    title="Missing Values Count",
-                    color_discrete_sequence=['#FF6347']
-                )
+
+                # Use cached function for the missing data visualization
+                fig_missing = self._get_cached_missing_data_chart(missing)
                 st.plotly_chart(fig_missing, use_container_width=True)
             else:
-                st.success(" No missing values detected in the processed dataset (Imputation applied).")
+                st.success("✅ No missing values detected in the processed dataset (Imputation applied).")
 
                 # --- HISTOGRAM CODE ---
                 st.subheader("2. Price Distribution Analysis")
 
-                # We filter out extreme outliers for better visualization (95th percentile)
+                # Use cached function for the histogram generation
                 filter_limit = df['price'].quantile(0.95)
-                filtered_view = df[df['price'] < filter_limit]
-
-                # Create a Histogram with a Box Plot on top (Marginal)
-                fig_dist = px.histogram(
-                    filtered_view,
-                    x="price",
-                    nbins=60,  # More bins for detail
-                    marginal="box",  # Adds the Box Plot at the top
-                    title="<b>Distribution of Food Prices</b> (PHP)",
-                    labels={'price': 'Price (PHP)', 'count': 'Frequency'},
-                    color_discrete_sequence=['#537B2F'],  # Your Primary Green
-                    opacity= 1  # Slight transparency
-                )
-
-                # Apply the "Glass/Clean" Theme to the Chart
-                fig_dist.update_layout(
-                    plot_bgcolor="#FFFFFF",  # <--- Solid White Plot Area
-                    paper_bgcolor="#FFFFFF",  # <--- Solid White Surrounding Area
-                    bargap=0.2,  # Spacing between bars
-                    font=dict(color="#2D5128"),  # Dark Green font
-                    title_font_size=18,
-
-                    # Clean up the Axes
-                    xaxis=dict(
-                        showgrid=False,
-                        title_font=dict(size=14)
-                    ),
-                    yaxis=dict(
-                        showgrid=True,
-                        gridcolor='rgba(128,128,128,0.2)',  # Faint grid lines
-                        title_font=dict(size=14)
-                    ),
-                    showlegend=False,
-                    margin = dict(l=20, r=20, t=50, b=20),
-                )
-
-                # Custom Hover Template
-                fig_dist.update_traces(
-                    hovertemplate="<b>Price:</b> ₱%{x:.2f}<br><b>Count:</b> %{y}"
-                )
+                fig_dist = self._get_cached_price_distribution_chart(df, filter_limit)
 
                 st.plotly_chart(fig_dist, use_container_width=True)
 
                 st.caption(
                     f"️ **Note:** The chart focuses on the main cluster of prices (0 - ₱{filter_limit:,.0f}). Extreme outliers (top 5%) are excluded for clarity.")
 
-                # --- TAB 3: MEET THE TEAM (Pure Streamlit) ---
-                with tab_team:
-                    st.subheader("1. Development Team")
-                    st.write("This project is a collaborative effort by the following members:")
+        # --- TAB 3: MEET THE TEAM (Pure Streamlit) ---
+        with tab_team:
+            st.subheader("1. Development Team")
+            st.write("This project is a collaborative effort by the following members:")
 
-                    team = [
-                        {"name": "Julian Ramil Andales", "role": "Data Analyst", "photo": "julian.png"},
-                        {"name": "Nathanael Jedd del Castillo", "role": "Developer", "photo": "nate.png"},
-                        {"name": "Sherielyn Guadiana", "role": "Data Analyst", "photo": "sherielyn.png"},
-                        {"name": "Kyle Plando", "role": "Data Analyst", "photo": "kyle.png"},
-                        {"name": "Shervin Dale Tabernero", "role": "Developer", "photo": "shervin.png"},
-                    ]
+            team = [
+                {"name": "Julian Ramil Andales", "role": "Data Analyst", "photo": "julian.png"},
+                {"name": "Nathanael Jedd del Castillo", "role": "Developer", "photo": "nate.png"},
+                {"name": "Sherielyn Guadiana", "role": "Data Analyst", "photo": "sherielyn.png"},
+                {"name": "Kyle Plando", "role": "Data Analyst", "photo": "kyle.png"},
+                {"name": "Shervin Dale Tabernero", "role": "Developer", "photo": "shervin.png"},
+            ]
+
+            cols = st.columns(len(team))
+
+            for i, member in enumerate(team):
+                with cols[i]:
+                    file_path = f"assets/images/{member['photo']}"
+
+                    # Use the new cached function to get the base64 string
+                    base64_src = self._get_cached_image_base64(file_path)
+
+                    card_html = f"""
+                        <div class="team-card">
+                            <img src="{base64_src}" alt="{member['name']}'s photo">
+                            <div class="team-name">{member['name']}</div>
+                            <div class="team-role">{member['role']}</div>
+                        </div>
+                        """
+                    st.markdown(card_html, unsafe_allow_html=True)
+
+            st.divider()
+
+            # 4. Academic Context Section
+            st.subheader("2. Academic Context")
+
+            # Create a styled container for Academic Info
+            with st.container(border=True):
+
+                c1, c2 = st.columns([1, 2])
+
+                with c1:
+                    st.info(" **Course Subject**")
+                    st.write("CS365 - Data Analytics and Visualization")
+
+                    st.success(" **Institution**")
+                    st.write("Cebu Institute of Technology - University")
+
+                with c2:
+                    st.markdown("### Implementation Scope")
+                    st.write(
+                        "This project serves as the comprehensive implementation of all concepts taught in CS365. It demonstrates the full data pipeline: Extraction, Cleaning, Analysis, and Interactive Visualization.")
+
+                    st.markdown("###  Skills Leveraged")
+                    st.write(
+                        "The team has incorporated learned skills from the course (Pandas, Plotly, Streamlit) alongside self-taught advanced techniques in CSS styling, software architecture, and geospatial mapping.")
+
+            st.divider()
+
+    # --- CACHED METHODS FOR PERFORMANCE ---
+    # NOTE: All cached methods use '_self' to prevent Streamlit's UnhashableParamError
+
+    @st.cache_data(show_spinner=False)
+    def _get_cached_css(_self, file_name):
+        """Caches the content of the CSS file, preventing file I/O on every rerun."""
+        try:
+            with open(file_name) as f:
+                return f.read()
+        except FileNotFoundError:
+            # Provide a fallback style for the team card if the CSS file is missing
+            return ""
+
+    @st.cache_data(show_spinner=False)
+    def _get_cached_image_base64(_self, file_path):
+        """Caches the base64 encoding of a local image file, preventing repeated file reads."""
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, "rb") as image_file:
+                    encoded_string = base64.b64encode(image_file.read()).decode()
+                # Define the data URL structure
+                return f"data:image/png;base64,{encoded_string}"
+            except Exception:
+                return ""
+        return ""
 
 
-                    cols = st.columns(len(team))
+    @st.cache_data(show_spinner="Calculating top-level metrics...")
+    def _get_cached_metrics(_self, df: pd.DataFrame) -> dict:
+        """Calculates and caches the top-level summary metrics. FIX: Uses _self."""
+        min_year = df['year'].min()
+        max_year = df['year'].max()
 
-                    for i, member in enumerate(team):
-                        with cols[i]:
-                            file_path = f"assets/images/{member['photo']}"
+        return {
+            'total_records': len(df),
+            'commodities': df['commodity'].nunique(),
+            'regions': df['admin1'].nunique(),
+            'time_span': f"{int(min_year)} - {int(max_year)}"
+        }
 
-                            # 2. Check and Encode the image
-                            base64_src = ""  # Initialize fallback
-                            if os.path.exists(file_path):
-                                with open(file_path, "rb") as image_file:
-                                    encoded_string = base64.b64encode(image_file.read()).decode()
+    @st.cache_data(show_spinner="Generating Missing Data chart...")
+    def _get_cached_missing_data_chart(_self, missing: pd.Series):
+        """Generates and caches the missing data bar chart. FIX: Uses _self."""
+        return px.bar(
+            x=missing.index,
+            y=missing.values,
+            labels={'x': 'Column', 'y': 'Count of Nulls'},
+            title="Missing Values Count",
+            color_discrete_sequence=['#FF6347']
+        )
 
-                                # Define the data URL structure
-                                # NOTE: If your image is a JPG, change 'image/png' to 'image/jpeg'
-                                base64_src = f"data:image/png;base64,{encoded_string}"
+    @st.cache_data(show_spinner="Generating Price Distribution chart...")
+    def _get_cached_price_distribution_chart(_self, df: pd.DataFrame, filter_limit: float):
+        """Generates and caches the price distribution histogram/box plot. FIX: Uses _self."""
+        filtered_view = df[df['price'] < filter_limit]
 
-                            card_html = f"""
-                                <div class="team-card">
-                                    <img src="{base64_src}" alt="{member['name']}'s photo">
-                                    <div class="team-name">{member['name']}</div>
-                                    <div class="team-role">{member['role']}</div>
-                                </div>
-                                """
-                            st.markdown(card_html, unsafe_allow_html=True)
+        fig_dist = px.histogram(
+            filtered_view,
+            x="price",
+            nbins=60,
+            marginal="box",
+            title="<b>Distribution of Food Prices</b> (PHP)",
+            labels={'price': 'Price (PHP)', 'count': 'Frequency'},
+            color_discrete_sequence=['#537B2F'],
+            opacity=1
+        )
 
-                    st.divider()
+        fig_dist.update_layout(
+            plot_bgcolor="#FFFFFF",
+            paper_bgcolor="#FFFFFF",
+            bargap=0.2,
+            font=dict(color="#2D5128"),
+            title_font_size=18,
+            xaxis=dict(showgrid=False, title_font=dict(size=14)),
+            yaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)', title_font=dict(size=14)),
+            showlegend=False,
+            margin=dict(l=20, r=20, t=50, b=20),
+        )
 
-                    # 4. Academic Context Section
-                    st.subheader("2. Academic Context")
+        fig_dist.update_traces(hovertemplate="<b>Price:</b> ₱%{x:.2f}<br><b>Count:</b> %{y}")
 
-                    academic_container = """
-                    <style>
-                    .st-key-my-styled-container {
-                        /* Set the background color here */
-                        background-color: #f5f5f5;  
-                        border-radius: 10px;        /* Optional: for rounded corners */
-                        padding: 10px;              /* Optional: for spacing inside the container */
-                    }
-                    </style>
-                    """
-
-                    st.markdown(academic_container, unsafe_allow_html=True)
-                    # Create a styled container for Academic Info
-                    with st.container(border=True, key='my-styled-container'):
-
-                        c1, c2 = st.columns([1, 2])
-
-                        with c1:
-                            st.info(" **Course Subject**")
-                            st.write("CS365 - Data Analytics and Visualization")
-
-                            st.success(" **Institution**")
-                            st.write("Cebu Institute of Technology - University")
-
-                        with c2:
-                            st.markdown("### Implementation Scope")
-                            st.write(
-                                "This project serves as the comprehensive implementation of all concepts taught in CS365. It demonstrates the full data pipeline: Extraction, Cleaning, Analysis, and Interactive Visualization.")
-
-                            st.markdown("###  Skills Leveraged")
-                            st.write(
-                                "The team has incorporated learned skills from the course (Pandas, Plotly, Streamlit) alongside self-taught advanced techniques in CSS styling, software architecture, and geospatial mapping.")
-
-                    st.divider()
-
-
+        return fig_dist
 
     def inject_css(self, file_name):
         """Loads a local CSS file and injects it into the Streamlit app."""

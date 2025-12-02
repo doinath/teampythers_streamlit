@@ -169,3 +169,93 @@ class DataPrepPage:
                 st.plotly_chart(fig_type, use_container_width=True)
             else:
                 st.warning("Column 'pricetype' not found.")
+
+    @st.cache_data(show_spinner=False)
+    def _get_missing_data_metrics(_self, df: pd.DataFrame):
+        """Calculates and caches the missing data Series and total rows. FIX: Uses _self."""
+        return df.isnull().sum(), len(df)
+
+    @st.cache_data(show_spinner="Generating Missing Data chart...")
+    def _get_cached_missing_bar_chart(_self, missing: pd.Series, layout: dict):
+        """Generates and caches the missing data bar chart. FIX: Uses _self."""
+        fig = px.bar(
+            x=missing.index,
+            y=missing.values,
+            labels={'x': 'Column Name', 'y': 'Missing Rows'},
+            title=" Data Gap Analysis",
+            text=missing.values
+        )
+
+        fig.update_traces(
+            marker_color='#E57373',
+            marker_line_color='#D32F2F',
+            marker_line_width=1.5,
+            textposition='outside'
+        )
+
+        fig.update_layout(
+            **layout,
+            xaxis=dict(showgrid=False, title=None),
+            yaxis=dict(showgrid=True, gridcolor='rgba(0,0,0,0.05)'),
+        )
+        return fig
+
+    @st.cache_data(show_spinner=False)
+    def _get_cached_clean_pie_chart(_self, layout: dict):
+        """Generates and caches the 100% clean pie chart. FIX: Uses _self."""
+        dummy_data = pd.DataFrame({'Status': ['Filled Data', 'Missing'], 'Count': [100, 0]})
+
+        fig = px.pie(
+            dummy_data,
+            names='Status',
+            values='Count',
+            hole=0.7,
+            title="<b>Dataset Health Score</b>",
+            color='Status',
+            color_discrete_map={'Filled Data': '#537B2F', 'Missing': '#E0E0E0'}
+        )
+
+        fig.update_layout(
+            **layout,
+            showlegend=False,
+            annotations=[dict(
+                text='100%<br>CLEAN',
+                x=0.5, y=0.5,
+                font=dict(size=24, color='#537B2F'),
+                showarrow=False,
+            )]
+        )
+        fig.update_traces(hoverinfo='label+percent')
+        return fig
+
+    @st.cache_data(show_spinner="Analyzing Categorical Distributions...")
+    def _get_cached_categorical_charts(_self, df: pd.DataFrame, layout: dict):
+        """Generates and caches the commodity and pricetype charts. FIX: Uses _self."""
+        fig_comm = None
+        fig_type = None
+
+        # Commodity Chart
+        if 'commodity' in df.columns:
+            # Check if there is data before counting
+            if not df['commodity'].empty:
+                top_comm = df['commodity'].value_counts().head(10)
+                fig_comm = px.pie(names=top_comm.index, values=top_comm.values, hole=0.4, title="Top 10 Commodities")
+                fig_comm.update_layout(**layout)
+
+        # Price Type Chart
+        if 'pricetype' in df.columns:
+            if not df['pricetype'].empty:
+                fig_type = px.bar(
+                    df['pricetype'].value_counts(),
+                    orientation='h',
+                    color_discrete_sequence=['#2E8B57'],
+                    title="Market Type Count"
+                )
+                fig_type.update_layout(
+                    **layout,
+                    showlegend=False,
+                    xaxis_title="Count",
+                    yaxis_title="Price Type",
+                )
+
+        return fig_comm, fig_type

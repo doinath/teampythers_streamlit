@@ -446,9 +446,9 @@ class AnalysisPage:
 
         # Create the three tabs for dispatching the analyses
         tab_sherielyn, tab_plando, tab_julian = st.tabs([
-            "1. Sherielyn: K-Means Clustering",
-            "2. Plando: EM Clustering & Comparative",
-            "3. Julian: Apriori Association Rules"
+            "1. K-Means Clustering",
+            "2. EM Clustering & Comparative",
+            "3. Apriori Association Rules"
         ])
 
         with tab_sherielyn:

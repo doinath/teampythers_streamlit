@@ -35,7 +35,7 @@ class StreamlitApp:
         # Inject CSS
         self.inject_css('assets/css/styles.css')
         self.inject_css('assets/css/app_controller.css')
-        self.inject_css('assets/css/overview.css')
+
 
         # Initialize session state for current page
         if "current_page" not in st.session_state:

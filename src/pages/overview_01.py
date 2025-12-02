@@ -17,7 +17,7 @@ class OverviewPage:
 
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-        st.title("🇵🇭 Philippine Food Price Analysis")
+        st.title(" Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to 2023")
 
         # Get the data from DataManager
@@ -100,7 +100,7 @@ class OverviewPage:
                 )
                 st.plotly_chart(fig_missing, use_container_width=True)
             else:
-                st.success("✅ No missing values detected in the processed dataset (Imputation applied).")
+                st.success(" No missing values detected in the processed dataset (Imputation applied).")
 
                 # --- HISTOGRAM CODE ---
                 st.subheader("2. Price Distribution Analysis")
@@ -151,7 +151,7 @@ class OverviewPage:
                 st.plotly_chart(fig_dist, use_container_width=True)
 
                 st.caption(
-                    f"ℹ️ **Note:** The chart focuses on the main cluster of prices (0 - ₱{filter_limit:,.0f}). Extreme outliers (top 5%) are excluded for clarity.")
+                    f"️ **Note:** The chart focuses on the main cluster of prices (0 - ₱{filter_limit:,.0f}). Extreme outliers (top 5%) are excluded for clarity.")
 
                 # --- TAB 3: MEET THE TEAM (Pure Streamlit) ---
                 with tab_team:

@@ -173,7 +173,7 @@ def _run_apriori_analysis(df: pd.DataFrame, query: str, min_support: float, min_
 
 def render_sherielyn_analysis(dm):
     """Renders Sherielyn's K-Means clustering analysis."""
-    st.header("1. 🧩 K-Means Market Segmentation")
+    st.header("1. K-Means Market Segmentation")
 
     df = dm.get_data().copy()
     if df.empty:
@@ -232,7 +232,7 @@ def render_sherielyn_analysis(dm):
 
     # --- Clustering & Visualization ---
     if len(market_features) < num_clusters:
-        st.warning("⚠️ Not enough data points to generate clusters. Adjust filters.")
+        st.warning(" Not enough data points to generate clusters. Adjust filters.")
         return
 
     st.markdown(
@@ -277,7 +277,7 @@ def render_sherielyn_analysis(dm):
 
 def render_plando_analysis(dm):
     """Renders Plando's EM Clustering and Comparative Analysis."""
-    st.header("2. 📊 EM Clustering & Comparative Analysis")
+    st.header("2. EM Clustering & Comparative Analysis")
 
     # Plando's code structure assumes specific renamed columns
     df_raw = dm.get_data().copy()
@@ -378,7 +378,7 @@ def render_plando_analysis(dm):
 
 def render_julian_analysis(dm):
     """Renders Julian's Apriori Association Rule Mining analysis."""
-    st.header("3. 🔗 Apriori Association Rules")
+    st.header("3. Apriori Association Rules")
 
     df_raw = dm.get_data().copy()
     df = _clean_data(df_raw.copy())
@@ -396,7 +396,7 @@ def render_julian_analysis(dm):
     colA, colB, colC = st.columns([1, 1, 1])
 
     with colA:
-        # 🟢 FIX: Replaced st.text_input with st.selectbox
+        #  FIX: Replaced st.text_input with st.selectbox
         selected_commodity = st.selectbox("Commodity:", unique_commodities, key='j_commodity')
     with colB:
         min_support = st.slider("Minimum Support:", min_value=0.01, max_value=0.2, value=0.1, key='j_support')
@@ -442,7 +442,7 @@ class AnalysisPage:
         self.dm = data_manager
 
     def render(self):
-        st.title("🔬 Consolidated Market Analysis Dashboard")
+        st.title(" Consolidated Market Analysis Dashboard")
 
         # Create the three tabs for dispatching the analyses
         tab_sherielyn, tab_plando, tab_julian = st.tabs([

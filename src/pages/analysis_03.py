@@ -5,28 +5,30 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture  # For EM Clustering (Plando)
+from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.exceptions import ConvergenceWarning
 import warnings
-from itertools import combinations  # FIX for NameError: 'combinations'
+from itertools import combinations
 
 # Suppress ConvergenceWarning from sklearn
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
 # ==========================================
-# I. Data Manager (Simplified from previous examples)
+# I. Data Manager Helpers (Assumes DM is separate)
 # ==========================================
 
-# Placeholder for DataManager methods used in the provided code
+# NOTE: The _clean_data function should logically reside in your Data Manager
+# (or its file). Assuming you need to keep a cached copy of the cleaning logic here
+# for the Analysis page to use:
 @st.cache_data
 def _clean_data(df):
     """
-    Cleans the WFP dataset format used by Sherielyn's and Julian's logic.
+    Cleans the WFP dataset format once and caches the clean result.
     """
-    # Assuming the input df uses 'date', 'price', 'latitude', 'longitude' columns
+    df = df.copy()  # Work on a copy of the raw data
     df['date'] = pd.to_datetime(df['date'], dayfirst=True, errors='coerce')
     numeric_cols = ['price', 'usdprice', 'latitude', 'longitude']
     for col in numeric_cols:
@@ -192,11 +194,8 @@ def _run_apriori_analysis(df: pd.DataFrame, query: str, min_support: float, min_
 # ==========================================
 
 def render_sherielyn_analysis(dm):
-    """
-    Renders Sherielyn's K-Means clustering analysis.
-    Optimization: Clustering is now button-triggered for lower widget lag.
-    """
-    st.header("1. 🧩 K-Means Market Segmentation")
+    """Renders Sherielyn's K-Means clustering analysis."""
+    st.header("1. K-Means Market Segmentation")
 
     df_raw = dm.get_data()
     # OPTIMIZATION: Use the cached _clean_data function from Section I
@@ -249,7 +248,7 @@ def render_sherielyn_analysis(dm):
     if st.button(f"Run K-Means Analysis (k={num_clusters})", key='run_kmeans_btn'):
 
         if filtered_df.empty:
-            st.warning("No data matches the current filters. Adjust filters and try again.")
+            st.warning("⚠️ No data matches the current filters. Adjust filters and try again.")
             return
 
         st.markdown(
@@ -300,10 +299,7 @@ def render_sherielyn_analysis(dm):
 
 
 def render_plando_analysis(dm):
-    """
-    Renders Plando's EM Clustering and Comparative Analysis.
-    Optimization: Matplotlib plotting uses explicit figure/axes objects.
-    """
+    """Renders Plando's EM Clustering and Comparative Analysis."""
     st.header("2. EM Clustering & Comparative Analysis")
 
     df_raw = dm.get_data()
@@ -421,6 +417,7 @@ def render_julian_analysis(dm):
     colA, colB, colC = st.columns([1, 1, 1])
 
     with colA:
+        #  FIX: Replaced st.text_input with st.selectbox
         selected_commodity = st.selectbox("Commodity:", unique_commodities, key='j_commodity')
     with colB:
         min_support = st.slider("Minimum Support:", min_value=0.01, max_value=0.2, value=0.1, key='j_support')

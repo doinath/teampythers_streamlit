@@ -11,7 +11,7 @@ class OverviewPage:
 
     def render(self):
 
-        self.inject_css('assets/css/overview.css')
+        # self.inject_css('assets/css/overview.css')
         with open("assets/css/overview.css") as f:
             css = f.read()
 
@@ -45,6 +45,55 @@ class OverviewPage:
 
         st.divider()
 
+        css_content = """ 
+               <style>
+
+                /* === 1. STYLES FOR ALL TAB BUTTONS (BASE STATE) === */
+                .stTabs [data-baseweb="tab"] {
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: #4A4A4A;             /* Dark grey text */
+                    padding: 10px 15px;
+                    margin-right: 5px;
+                    border-radius: 6px 6px 0 0;
+                    background-color: #E8E8E8;  /* Light background for unselected tabs */
+
+                    /* Remove default borders/shadows from ALL tabs */
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+
+                /* === 2. STYLES FOR THE CURRENTLY SELECTED TAB (ACTIVE) === */
+                .stTabs [aria-selected="true"] {
+                    color: #FF4B4B;             /* Streamlit primary color for active text */
+                    background-color: #FFFFFF;  /* White background for the active tab */
+                    border-bottom: 3px solid #FF4B4B !important; /* Highlight bottom border */
+                }
+
+                /* === 3. FIX: REMOVE THE FOCUS RING/LINE (Outline) === */
+                /* Targets the tab button when it is clicked or navigated to via keyboard */
+                .stTabs [data-baseweb="tab"]:focus {
+                    outline: none !important;   /* This removes the focus line */
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+
+                /* === 4. FIX: REMOVE THE LINE INSIDE THE TAB CONTENT === */
+                /* This hides any standard Horizontal Rule (<hr>) element. 
+                   This is the most common cause of unwanted lines inside tab content. */
+                .stTabs [data-baseweb="tab-panel"] hr {
+                    display: none !important;
+                }
+
+                /* 5. Custom Styles for the Tab List Container (Spacing) */
+                .stTabs [data-baseweb="tab-list"] {
+                    gap: 0px; 
+                }
+
+                </style>
+                """
+
+        st.markdown(css_content, unsafe_allow_html=True)
         # --- SECTION 2: TABS FOR ORGANIZATION ---
         # We split the "Project Info" and "Data Health/Stats" to keep the page clean
         tab_info, tab_health, tab_team = st.tabs(["Project & Data Dictionary", "Data Health & Distributions", "Meet the Team"])

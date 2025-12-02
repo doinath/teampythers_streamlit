@@ -8,10 +8,18 @@ class DataPrepPage:
     def __init__(self, data_manager):
         self.dm = data_manager
 
+    # Use st.cache_data to ensure the DataFrame is only loaded/processed once
+    # This assumes self.dm.get_data() is the potentially expensive operation.
+    @st.cache_data(show_spinner="Loading and preparing data...")
+    def _get_dataframe(self):
+        """Fetches the processed DataFrame from the DataManager."""
+        return self.dm.get_data()
+
     def render(self):
         st.title("Data Exploration & Preparation")
 
-        df = self.dm.get_data()
+        # Get the DataFrame using the cached method
+        df = self._get_dataframe()
 
         if df is None or df.empty:
             st.error("No data available to analyze.")
@@ -19,6 +27,7 @@ class DataPrepPage:
 
         st.subheader("1. Handling Missing Values")
 
+        # Check for missing values in the current cached DataFrame
         missing = df.isnull().sum()
         missing = missing[missing > 0]
 

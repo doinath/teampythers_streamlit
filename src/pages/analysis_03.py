@@ -5,28 +5,30 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture  # For EM Clustering (Plando)
+from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.exceptions import ConvergenceWarning
 import warnings
-from itertools import combinations  # FIX for NameError: 'combinations'
+from itertools import combinations
 
 # Suppress ConvergenceWarning from sklearn
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
 # ==========================================
-# I. Data Manager (Simplified from previous examples)
+# I. Data Manager Helpers (Assumes DM is separate)
 # ==========================================
 
-# Placeholder for DataManager methods used in the provided code
+# NOTE: The _clean_data function should logically reside in your Data Manager
+# (or its file). Assuming you need to keep a cached copy of the cleaning logic here
+# for the Analysis page to use:
 @st.cache_data
 def _clean_data(df):
     """
-    Cleans the WFP dataset format used by Sherielyn's and Julian's logic.
+    Cleans the WFP dataset format once and caches the clean result.
     """
-    # Assuming the input df uses 'date', 'price', 'latitude', 'longitude' columns
+    df = df.copy()  # Work on a copy of the raw data
     df['date'] = pd.to_datetime(df['date'], dayfirst=True, errors='coerce')
     numeric_cols = ['price', 'usdprice', 'latitude', 'longitude']
     for col in numeric_cols:
@@ -56,22 +58,43 @@ def _add_region_label(text):
 # II. CACHED & HELPER FUNCTIONS
 # ==========================================
 
-# --- A. Sherielyn's K-Means Caching ---
+# --- A. Sherielyn's K-Means Caching (OPTIMIZED) ---
+# Now handles feature engineering inside the cache to bundle the heavy work.
 
 @st.cache_data
-def _run_k_means_and_merge(filtered_df: pd.DataFrame, market_features: pd.DataFrame, num_clusters: int):
-    """K-Means: Runs clustering and merges results."""
+def _run_k_means_and_merge(filtered_df: pd.DataFrame, num_clusters: int):
+    """
+    K-Means: Runs feature aggregation, clustering, and merges results.
+    Feature aggregation is now inside the cached function.
+    """
+    # 1. Feature Engineering
+    market_features = filtered_df.groupby(['market', 'admin1']).agg({
+        'price': ['mean', 'std'],
+        'latitude': 'first',
+        'longitude': 'first'
+    }).reset_index()
+    market_features.columns = ['market', 'region', 'avg_price', 'volatility', 'lat', 'lon']
+    market_features = market_features.dropna()
+
+    # 2. Check Data Sufficiency
+    if len(market_features) < num_clusters:
+        return None, None, "⚠️ Not enough data points to generate clusters. Adjust filters."
+
+    # 3. Clustering
     kmeans = KMeans(n_clusters=num_clusters, random_state=42, n_init=10)
     market_features['Cluster'] = kmeans.fit_predict(market_features[['avg_price', 'volatility']])
     market_features['Cluster'] = "Group " + market_features['Cluster'].astype(str)
+
+    # 4. Merge
     merged_df = filtered_df.merge(market_features[['market', 'Cluster']], on='market')
-    return market_features, merged_df
+
+    return market_features, merged_df, None  # return None for error message if successful
 
 
 # --- B. Plando's EM Clustering Caching ---
 
 @st.cache_data
-def _run_em_clustering(df_comm: pd.DataFrame, commodity: str, n_clusters: int):
+def _run_em_clustering(df_comm: pd.DataFrame, n_clusters: int):  # Removed unused 'commodity' arg
     """EM Clustering: Runs Gaussian Mixture Model and returns clustered features."""
     regional_features = df_comm.groupby('region').agg(
         avg_price=('price_php', 'mean'),
@@ -95,8 +118,7 @@ def _run_em_clustering(df_comm: pd.DataFrame, commodity: str, n_clusters: int):
 
 @st.cache_data
 def _run_apriori_analysis(df: pd.DataFrame, query: str, min_support: float, min_confidence: float):
-    """Apriori: Runs Association Rule Mining for a single commodity."""
-
+    # ... (Apriori function remains unchanged as it is already cached)
     # Data prep specific to Apriori (Discretize Prices)
     # Using 'pricetype' and 'price' column names consistent with the WFP file structure
     df_ap = df[df['pricetype'] == 'Retail'].dropna(subset=['price']).copy()
@@ -172,17 +194,22 @@ def _run_apriori_analysis(df: pd.DataFrame, query: str, min_support: float, min_
 # ==========================================
 
 def render_sherielyn_analysis(dm):
-    """Renders Sherielyn's K-Means clustering analysis."""
+    """
+    Renders Sherielyn's K-Means clustering analysis.
+    Optimization: Clustering is now button-triggered for lower widget lag.
+    """
     st.header("1. 🧩 K-Means Market Segmentation")
 
-    df = dm.get_data().copy()
+    df_raw = dm.get_data()
+    # OPTIMIZATION: Use the cached _clean_data function from Section I
+    df = _clean_data(df_raw)
+
     if df.empty:
         st.error("Data not available.")
         return
 
     # --- Controls for K-Means ---
     st.subheader("Clustering Parameters")
-    # Use 4 columns for controls
     colA, colB, colC, colD = st.columns([1.5, 1.5, 1, 1])
 
     with colA:
@@ -198,17 +225,18 @@ def render_sherielyn_analysis(dm):
 
     min_date, max_date = df['date'].min(), df['date'].max()
 
+    # OPTIMIZATION: Set a smaller default date range to speed up initial script run
+    default_start_date = max_date - pd.DateOffset(years=1) if pd.notnull(max_date) and max_date > min_date else min_date
+
     with colC:
-        # FIX: Assigns to a single variable (resolves TypeError)
-        start_date = st.date_input("Start Date:", min_date, key='s_start_date')
+        start_date = st.date_input("Start Date:", default_start_date, key='s_start_date')
 
     with colD:
-        # FIX: Assigns to a single variable (resolves TypeError)
         end_date = st.date_input("End Date:", max_date, key='s_end_date')
 
     st.markdown("---")
 
-    # --- Data Processing ---
+    # --- Data Filtering (Runs on every script rerun, kept minimal) ---
     mask = (
             (df['commodity'] == selected_commodity) &
             (df['pricetype'] == selected_pricetype) &
@@ -219,69 +247,73 @@ def render_sherielyn_analysis(dm):
         mask = mask & (df['admin1'] == selected_region)
     filtered_df = df.loc[mask].copy()
 
-    if not filtered_df.empty:
-        market_features = filtered_df.groupby(['market', 'admin1']).agg({
-            'price': ['mean', 'std'],
-            'latitude': 'first',
-            'longitude': 'first'
-        }).reset_index()
-        market_features.columns = ['market', 'region', 'avg_price', 'volatility', 'lat', 'lon']
-        market_features = market_features.dropna()
+    # --- Clustering & Visualization (BUTTON-TRIGGERED OPTIMIZATION) ---
+    if st.button(f"Run K-Means Analysis (k={num_clusters})", key='run_kmeans_btn'):
+
+        if filtered_df.empty:
+            st.warning("⚠️ No data matches the current filters. Adjust filters and try again.")
+            return
+
+        st.markdown(
+            f"*Target:* **{selected_commodity}** ({selected_pricetype}) | *Algorithm:* K-Means Clustering (**k={num_clusters}**)")
+
+        # Run the cached function
+        market_features_clustered, merged_df, error_msg = _run_k_means_and_merge(
+            filtered_df, num_clusters
+        )
+
+        if error_msg:
+            st.warning(error_msg)
+            return
+
+        # Use tabs for visualization (as requested previously)
+        tab1, tab2, tab3 = st.tabs(["Scatter & Map", "Time Series Behavior", "Insights"])
+
+        with tab1:
+            st.subheader("Cluster Identification & Geography")
+            colA_vis, colB_vis = st.columns(2)
+
+            with colA_vis:
+                fig_scatter = px.scatter(
+                    market_features_clustered, x='avg_price', y='volatility', color='Cluster',
+                    hover_name='market', title="Market Segments", template="plotly_white"
+                )
+                st.plotly_chart(fig_scatter, use_container_width=True)
+
+            with colB_vis:
+                fig_map = px.scatter_mapbox(
+                    market_features_clustered, lat="lat", lon="lon", color="Cluster",
+                    hover_name="market", zoom=4, mapbox_style="carto-positron", title="Cluster Map"
+                )
+                st.plotly_chart(fig_map, use_container_width=True)
+
+        with tab2:
+            st.subheader("Time Series Price Trends by Cluster")
+            cluster_time_series = merged_df.groupby(['date', 'Cluster'])['price'].mean().reset_index()
+            fig_ts = px.line(cluster_time_series, x='date', y='price', color='Cluster',
+                             title=f"Price Trends of Cluster Groups: {selected_commodity}", template="plotly_white")
+            st.plotly_chart(fig_ts, use_container_width=True)
+
+        with tab3:
+            st.info(
+                "K-Means groups markets based on similarity in price and volatility. The maps help confirm regional patterns.")
     else:
-        market_features = pd.DataFrame()
-
-    # --- Clustering & Visualization ---
-    if len(market_features) < num_clusters:
-        st.warning("⚠️ Not enough data points to generate clusters. Adjust filters.")
-        return
-
-    st.markdown(
-        f"*Target:* **{selected_commodity}** ({selected_pricetype}) | *Algorithm:* K-Means Clustering (**k={num_clusters}**)")
-
-    market_features_clustered, merged_df = _run_k_means_and_merge(
-        filtered_df, market_features, num_clusters
-    )
-
-    # Use tabs for visualization (as requested previously)
-    tab1, tab2, tab3 = st.tabs(["Scatter & Map", "Time Series Behavior", "Insights"])
-
-    with tab1:
-        st.subheader("Cluster Identification & Geography")
-        colA_vis, colB_vis = st.columns(2)
-
-        with colA_vis:
-            fig_scatter = px.scatter(
-                market_features_clustered, x='avg_price', y='volatility', color='Cluster',
-                hover_name='market', title="Market Segments", template="plotly_white"
-            )
-            st.plotly_chart(fig_scatter, use_container_width=True)
-
-        with colB_vis:
-            fig_map = px.scatter_mapbox(
-                market_features_clustered, lat="lat", lon="lon", color="Cluster",
-                hover_name="market", zoom=4, mapbox_style="carto-positron", title="Cluster Map"
-            )
-            st.plotly_chart(fig_map, use_container_width=True)
-
-    with tab2:
-        st.subheader("Time Series Price Trends by Cluster")
-        cluster_time_series = merged_df.groupby(['date', 'Cluster'])['price'].mean().reset_index()
-        fig_ts = px.line(cluster_time_series, x='date', y='price', color='Cluster',
-                         title=f"Price Trends of Cluster Groups: {selected_commodity}", template="plotly_white")
-        st.plotly_chart(fig_ts, use_container_width=True)
-
-    with tab3:
-        st.info(
-            "K-Means groups markets based on similarity in price and volatility. The maps help confirm regional patterns.")
+        st.info("Click the 'Run K-Means Analysis' button above to start the analysis.")
 
 
 def render_plando_analysis(dm):
-    """Renders Plando's EM Clustering and Comparative Analysis."""
+    """
+    Renders Plando's EM Clustering and Comparative Analysis.
+    Optimization: Matplotlib plotting uses explicit figure/axes objects.
+    """
     st.header("2. 📊 EM Clustering & Comparative Analysis")
 
+    df_raw = dm.get_data()
+    # OPTIMIZATION: Use the cached _clean_data function from Section I
+    df_cleaned = _clean_data(df_raw)
+
     # Plando's code structure assumes specific renamed columns
-    df_raw = dm.get_data().copy()
-    df = df_raw.rename(
+    df = df_cleaned.rename(
         columns={'admin1': 'region', 'commodity': 'commodity', 'price': 'price_php', 'date': 'date'}).copy()
 
     if df.empty:
@@ -318,13 +350,10 @@ def render_plando_analysis(dm):
         monthly_avg = df_comp.groupby('month_year')['price_php'].mean().reset_index(name='avgPrice')
         monthly_avg['date_for_plot'] = monthly_avg['month_year'].dt.to_timestamp()
 
-        # Time Series Chart
-        # Set to (9, 5) for a good rectangular aspect ratio.
-        plt.figure(figsize=(9, 5))
+        # OPTIMIZATION: Use figure/axes objects explicitly for Matplotlib
+        fig, ax = plt.subplots(figsize=(9, 5))
 
-        sns.lineplot(x='date_for_plot', y='avgPrice', data=monthly_avg, marker='o', color='#3498db')
-
-        ax = plt.gca()
+        sns.lineplot(x='date_for_plot', y='avgPrice', data=monthly_avg, marker='o', color='#3498db', ax=ax)
 
         ax.set_title(f'Avg Monthly Price Trend for {selected_commodity} (PHP)')
         ax.set_xlabel('Date')
@@ -334,15 +363,14 @@ def render_plando_analysis(dm):
         plt.xticks(rotation=45)
         plt.tight_layout()
 
-        # Use Streamlit's feature to stretch to column width, maintaining the ratio.
-        st.pyplot(plt.gcf(), use_container_width=True)
-
+        st.pyplot(fig, use_container_width=True)  # Use the figure object
         st.info("This chart shows the historical average price trend. No forecasting model is applied here.")
 
     with tab2:
         st.subheader(f"Regional Clustering (Gaussian Mixture Model, k={n_clusters})")
 
-        regional_features, cluster_info = _run_em_clustering(df_comm, selected_commodity, n_clusters)
+        # The clustering function is cached
+        regional_features, cluster_info = _run_em_clustering(df_comm, n_clusters)
 
         if regional_features is None:
             st.warning(cluster_info)
@@ -351,8 +379,7 @@ def render_plando_analysis(dm):
         st.info(cluster_info)
 
         # Plotting Clustering Results (Scatter Plot - Matplotlib)
-        # Set to (6, 4) for a compact, balanced square/rectangle aspect ratio.
-        fig_cluster, ax_cluster = plt.subplots(figsize=(6, 4))
+        fig_cluster, ax_cluster = plt.subplots(figsize=(9, 5))
 
         sns.scatterplot(
             x='avg_price', y='std_price', data=regional_features,
@@ -371,8 +398,7 @@ def render_plando_analysis(dm):
         ax_cluster.set_ylabel('Price Volatility (Standard Deviation)')
         plt.tight_layout()
 
-        # Use Streamlit's feature to stretch to column width, maintaining the ratio.
-        st.pyplot(fig_cluster, use_container_width=True)
+        st.pyplot(fig_cluster, use_container_width=True)  # Use the figure object
         st.caption("Each point represents a region, grouped by similar average price and volatility.")
 
 
@@ -380,8 +406,9 @@ def render_julian_analysis(dm):
     """Renders Julian's Apriori Association Rule Mining analysis."""
     st.header("3. 🔗 Apriori Association Rules")
 
-    df_raw = dm.get_data().copy()
-    df = _clean_data(df_raw.copy())
+    df_raw = dm.get_data()
+    # OPTIMIZATION: Use the cached _clean_data function from Section I
+    df = _clean_data(df_raw)
 
     # Check if data is available and extract unique commodities
     if df.empty:
@@ -396,7 +423,6 @@ def render_julian_analysis(dm):
     colA, colB, colC = st.columns([1, 1, 1])
 
     with colA:
-        # 🟢 FIX: Replaced st.text_input with st.selectbox
         selected_commodity = st.selectbox("Commodity:", unique_commodities, key='j_commodity')
     with colB:
         min_support = st.slider("Minimum Support:", min_value=0.01, max_value=0.2, value=0.1, key='j_support')
@@ -408,7 +434,7 @@ def render_julian_analysis(dm):
     if st.button("Run Apriori Analysis"):
         st.markdown("### Association Rules Found (High Price Occurrences)")
 
-        # Run the cached Apriori analysis, passing the selected_commodity as the query
+        # Run the cached Apriori analysis
         results, info = _run_apriori_analysis(df, selected_commodity, min_support, min_confidence)
 
         st.info(info)
@@ -433,6 +459,7 @@ def render_julian_analysis(dm):
             hide_index=True,
         )
         st.caption("Showing Top 10 Rules sorted by Lift.")
+
 
 # ==========================================
 # IV. ANALYSIS PAGE CLASS (DISPATCHER)

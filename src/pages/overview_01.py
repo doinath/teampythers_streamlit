@@ -153,11 +153,25 @@ class OverviewPage:
 
             st.divider()
 
+
             # 4. Academic Context Section
             st.subheader("2. Academic Context")
 
+            white_container = """
+                                <style>
+                                .st-key-my-styled-container {
+                                    background-color: #f5f5f5;
+                                    border-radius: 10px;
+                                    padding: 10px;
+                                    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+                                }
+                                </style>
+                                """
+
+            st.markdown(white_container, unsafe_allow_html=True)
+
             # Create a styled container for Academic Info
-            with st.container(border=True):
+            with st.container(border=True, key='my-styled-container'):
 
                 c1, c2 = st.columns([1, 2])
 
@@ -176,6 +190,7 @@ class OverviewPage:
                     st.markdown("###  Skills Leveraged")
                     st.write(
                         "The team has incorporated learned skills from the course (Pandas, Plotly, Streamlit) alongside self-taught advanced techniques in CSS styling, software architecture, and geospatial mapping.")
+
 
             st.divider()
 

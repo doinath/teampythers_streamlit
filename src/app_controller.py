@@ -1,10 +1,7 @@
 import streamlit as st
 import os
 
-# Import the Data Manager
 from src.data_manager import DataManager
-# Import UI Pages
-# Note: Ensure these files exist in src/pages/ with the corresponding class names
 from src.pages import overview_01, data_prep_02, analysis_03, conclusions_04
 
 
@@ -35,6 +32,7 @@ class StreamlitApp:
         # Inject CSS
         self.inject_css('assets/css/styles.css')
         self.inject_css('assets/css/app_controller.css')
+        self.inject_css('assets/css/overview.css')
 
 
         # Initialize session state for current page

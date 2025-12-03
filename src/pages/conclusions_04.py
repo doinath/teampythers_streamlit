@@ -333,12 +333,22 @@ class ConclusionsPage:
 
         # --- SECTION 1: VISUAL SUMMARY OF FINDINGS ---
         st.subheader("1. Key Takeaways")
-
+        white_container = """
+        <style>
+        .st-key-c1, .st-key-c2, .st-key-c3  {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+        }
+        </style>
+        """
+        st.markdown(white_container, unsafe_allow_html=True)
         # Using columns to create "Card-like" summaries
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            with st.container(border=True):
+            with st.container(border=True, key="c1"):
                 st.markdown("#### Market Contagion")
                 st.caption("Geography")
                 st.info(
@@ -346,7 +356,7 @@ class ConclusionsPage:
                 st.markdown("`Hubs` $\\to$ `Dependents`")
 
         with col2:
-            with st.container(border=True):
+            with st.container(border=True, key="c2"):
                 st.markdown("#### Substitution Effect")
                 st.caption("Cross-Category")
                 st.warning(
@@ -354,7 +364,7 @@ class ConclusionsPage:
                 st.markdown("`Pork High` $\\to$ `Fish High`")
 
         with col3:
-            with st.container(border=True):
+            with st.container(border=True, key="c3"):
                 st.markdown("#### Regional Clustering")
                 st.caption("Containment")
                 st.success(

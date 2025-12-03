@@ -158,15 +158,15 @@ class OverviewPage:
             st.subheader("2. Academic Context")
 
             white_container = """
-                                <style>
-                                .st-key-my-styled-container {
-                                    background-color: #f5f5f5;
-                                    border-radius: 10px;
-                                    padding: 10px;
-                                    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
-                                }
-                                </style>
-                                """
+            <style>
+            .st-key-my-styled-container {
+                background-color: #f5f5f5;
+                border-radius: 10px;
+                padding: 10px;
+                box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+            }
+            </style>
+            """
 
             st.markdown(white_container, unsafe_allow_html=True)
 

@@ -7,7 +7,7 @@ from src.pages import overview_01, data_prep_02, analysis_03, conclusions_04
 
 class StreamlitApp:
     def __init__(self):
-        # 1. Page Configuration MUST be the first Streamlit command
+
         st.set_page_config(
             page_title="Team Pythers | Food Prices",
             page_icon="🌾",
@@ -15,12 +15,8 @@ class StreamlitApp:
             initial_sidebar_state="expanded"
         )
 
-        # 2. Initialize Data Manager (The Model)
-        # Using the specific file name you provided
         self.data_manager = DataManager('data/wfp_food_prices_phl.csv')
 
-        # 3. Initialize Pages (The Views)
-        # We instantiate the classes here and pass the data_manager instance to them
         self.pages = {
             '01 Overview': overview_01.OverviewPage(self.data_manager),
             '02 Data Preparation': data_prep_02.DataPrepPage(self.data_manager),
@@ -29,17 +25,13 @@ class StreamlitApp:
         }
 
     def run(self):
-        # Inject CSS
         self.inject_css('assets/css/styles.css')
         self.inject_css('assets/css/app_controller.css')
         self.inject_css('assets/css/overview.css')
 
-
-        # Initialize session state for current page
         if "current_page" not in st.session_state:
             st.session_state.current_page = "01 Overview"
 
-        # Sidebar Navigation
         with st.sidebar:
             st.title("Team Pythers")
             st.caption("Philippine Food Price Analysis")
@@ -62,7 +54,7 @@ class StreamlitApp:
                     st.session_state.current_page = page_key
 
             st.markdown("---")
-            st.info("Data Source: WFP (2000-Present)")
+            st.info("Data Source: WFP (2000 - 2023)")
 
 
         page = self.pages[st.session_state.current_page]
@@ -80,7 +72,7 @@ class StreamlitApp:
                     st.markdown(f'<style>{css_content}</style>', unsafe_allow_html=True)
             else:
 
-                st.warning(f"⚠️ CSS file not found at: {css_file_path}")
+                st.warning(f"CSS file not found at: {css_file_path}")
 
         except Exception as e:
             st.error(f"Error loading CSS: {e}")

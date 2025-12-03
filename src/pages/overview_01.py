@@ -5,31 +5,24 @@ import base64
 import os
 from pathlib import Path
 
-
 class OverviewPage:
     def __init__(self, data_manager):
         self.dm = data_manager
 
     def render(self):
 
-        # 1. Inject CSS first (Using cached function to read file content once)
         css = self._get_cached_css('assets/css/overview.css')
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
-        # Note: The original inject_css function logic is now moved into the cached function.
 
         st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to 2023")
 
-        # 2. Get the data from DataManager
         df = self.dm.get_data()
 
-        # Check if data exists before trying to access columns
         if df is None or df.empty:
             st.error("No data available. Please check the dataset file.")
             return
 
-        # --- SECTION 1: TOP-LEVEL METRICS ---
-        # Call the cached method with the fix: `self` is passed, but the function signature uses `_self`.
         metrics = self._get_cached_metrics(df)
 
         c1, c2, c3, c4 = st.columns(4)
@@ -47,7 +40,6 @@ class OverviewPage:
         tab_info, tab_health, tab_team = st.tabs(
             ["Project & Data Dictionary", "Data Health & Distributions", "Meet the Team"])
 
-        # --- TAB 1: PROJECT INFO ---
         with tab_info:
             st.subheader("Research Context")
             st.markdown("""
@@ -62,7 +54,6 @@ class OverviewPage:
             st.subheader("Data Dictionary")
             st.markdown("Below is the structure of the dataset used for this analysis:")
 
-            # Create a description dataframe for the UI
             data_dict = pd.DataFrame([
                 {"Column": "date", "Description": "Date of data collection (Monthly)"},
                 {"Column": "admin1", "Description": "Administrative Region (e.g., NCR, Region III)"},
@@ -91,27 +82,22 @@ class OverviewPage:
                         5. **Data Type Enforcement:** Ensured `price` is float and `date` is datetime.
                         """)
 
-        # --- TAB 2: DATA HEALTH (Visualizations & Missing Data) ---
         with tab_health:
             st.subheader("1. Missing Data Analysis")
 
-            # Calculate missing values
             missing = df.isnull().sum()
             missing = missing[missing > 0]
 
             if not missing.empty:
                 st.warning("The following columns have missing values:")
 
-                # Use cached function for the missing data visualization
                 fig_missing = self._get_cached_missing_data_chart(missing)
                 st.plotly_chart(fig_missing, use_container_width=True)
             else:
-                st.success("✅ No missing values detected in the processed dataset (Imputation applied).")
+                st.success("No missing values detected in the processed dataset (Imputation applied).")
 
-                # --- HISTOGRAM CODE ---
                 st.subheader("2. Price Distribution Analysis")
 
-                # Use cached function for the histogram generation
                 filter_limit = df['price'].quantile(0.95)
                 fig_dist = self._get_cached_price_distribution_chart(df, filter_limit)
 
@@ -120,7 +106,6 @@ class OverviewPage:
                 st.caption(
                     f"️ **Note:** The chart focuses on the main cluster of prices (0 - ₱{filter_limit:,.0f}). Extreme outliers (top 5%) are excluded for clarity.")
 
-        # --- TAB 3: MEET THE TEAM (Pure Streamlit) ---
         with tab_team:
             st.subheader("1. Development Team")
             st.write("This project is a collaborative effort by the following members:")
@@ -139,7 +124,6 @@ class OverviewPage:
                 with cols[i]:
                     file_path = f"assets/images/{member['photo']}"
 
-                    # Use the new cached function to get the base64 string
                     base64_src = self._get_cached_image_base64(file_path)
 
                     card_html = f"""
@@ -153,8 +137,6 @@ class OverviewPage:
 
             st.divider()
 
-
-            # 4. Academic Context Section
             st.subheader("2. Academic Context")
 
             white_container = """
@@ -170,7 +152,6 @@ class OverviewPage:
 
             st.markdown(white_container, unsafe_allow_html=True)
 
-            # Create a styled container for Academic Info
             with st.container(border=True, key='my-styled-container'):
 
                 c1, c2 = st.columns([1, 2])
@@ -194,17 +175,14 @@ class OverviewPage:
 
             st.divider()
 
-    # --- CACHED METHODS FOR PERFORMANCE ---
-    # NOTE: All cached methods use '_self' to prevent Streamlit's UnhashableParamError
-
     @st.cache_data(show_spinner=False)
     def _get_cached_css(_self, file_name):
         """Caches the content of the CSS file, preventing file I/O on every rerun."""
         try:
             with open(file_name) as f:
                 return f.read()
+
         except FileNotFoundError:
-            # Provide a fallback style for the team card if the CSS file is missing
             return ""
 
     @st.cache_data(show_spinner=False)
@@ -214,7 +192,7 @@ class OverviewPage:
             try:
                 with open(file_path, "rb") as image_file:
                     encoded_string = base64.b64encode(image_file.read()).decode()
-                # Define the data URL structure
+
                 return f"data:image/png;base64,{encoded_string}"
             except Exception:
                 return ""
@@ -282,5 +260,6 @@ class OverviewPage:
         try:
             with open(file_name) as f:
                 st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
         except FileNotFoundError:
             st.error(f"Error: Could not find '{file_name}'. Ensure it is in the root directory.")

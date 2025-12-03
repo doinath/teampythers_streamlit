@@ -196,6 +196,7 @@ class ConclusionsPage:
         but by **Volatility** (reliability). This creates a "Two-Factor" market segmentation.
         """)
 
+
         # --- DATA SETUP ---
         em_clusters = {
             "The Production Havens": {
@@ -224,6 +225,19 @@ class ConclusionsPage:
         # --- INTERACTIVE SECTION 1: Market Segment Explorer ---
         st.subheader("1. Regional Segmentation")
 
+        white_container = """
+                        <style>
+                        .st-key-c6 {
+                        background-color: #ffffff;
+                        border-radius: 12px;
+                        padding: 20px;
+                        box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+                        }
+                        </style>
+                        """
+
+        st.markdown(white_container, unsafe_allow_html=True)
+
         # st.pills will now be colored by your external CSS file
         selected_em = st.pills(
             "Select Market Type to Explore:",
@@ -238,7 +252,7 @@ class ConclusionsPage:
         data = em_clusters[selected_em]
 
         # Display Content
-        with st.container(border=True):
+        with st.container(border=True, key = "c6"):
             st.markdown(f"### {selected_em}")
             st.caption(f"**Profile:** {data['Subtitle']}")
 
@@ -335,14 +349,16 @@ class ConclusionsPage:
         st.subheader("1. Key Takeaways")
         white_container = """
         <style>
-        .st-key-c1, .st-key-c2, .st-key-c3  {
+        .st-key-c1, .st-key-c2, .st-key-c3, .st-key-c4,
+        .st-key-c5 {
         background-color: #ffffff;
         border-radius: 12px;
-        padding: 15px;
+        padding: 20px;
         box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
         }
         </style>
         """
+
         st.markdown(white_container, unsafe_allow_html=True)
         # Using columns to create "Card-like" summaries
         col1, col2, col3 = st.columns(3)
@@ -414,7 +430,7 @@ class ConclusionsPage:
                 st.caption(f"Metric Strength: {impact_level}")
 
             # Action Card for Geo
-            with st.container(border=True):
+            with st.container(border=True, key = "c4"):
                 st.markdown("### Recommended Action Plan")
                 st.success("**Strategy: Establish 'Trigger-Based' Inventory Releases**")
                 st.markdown(f"""
@@ -439,7 +455,7 @@ class ConclusionsPage:
                 st.caption("Cause: Consumer panic substitution")
 
             # Action Card for Substitution
-            with st.container(border=True):
+            with st.container(border=True, key = "c5"):
                 st.markdown("### Recommended Action Plan")
                 st.warning("**Strategy: Pre-emptive Subsidies on Substitutes**")
                 st.markdown(f"""

@@ -8,22 +8,17 @@ class DataPrepPage:
     def __init__(self, data_manager):
         self.dm = data_manager
 
-    # 1. Cache the DataFrame loading/preparation (MOST CRITICAL FOR LAG)
-    # Use '_self' to exclude the unhashable class instance from the cache key.
     @st.cache_data(show_spinner="Loading and preparing data...")
     def _get_dataframe(_self):
         """Fetches the processed DataFrame from the DataManager."""
-        # This will only run once unless the function definition or arguments change.
         return _self.dm.get_data()
 
-    # 2. Cache the calculation of missing metrics
     @st.cache_data(show_spinner=False)
     def _get_missing_metrics(_self, df: pd.DataFrame):
         """Calculates and caches the missing value Series."""
         missing = df.isnull().sum()
         return missing[missing > 0]
 
-    # 3. Cache the generation of Plotly figures for missing data
     @st.cache_data(show_spinner="Generating Missing Data chart...")
     def _create_missing_bar_chart(_self, missing: pd.Series, layout: dict):
         """Generates and caches the missing data bar chart."""
@@ -49,20 +44,17 @@ class DataPrepPage:
         )
         return fig
 
-    # 4. Cache the generation of Plotly figures for categorical distributions
     @st.cache_data(show_spinner="Analyzing Categorical Distributions...")
     def _create_categorical_charts(_self, df: pd.DataFrame, layout: dict):
         """Generates and caches the commodity and pricetype charts."""
         fig_comm = None
         fig_type = None
 
-        # Commodity Chart
         if 'commodity' in df.columns and not df['commodity'].empty:
             top_comm = df['commodity'].value_counts().head(10)
             fig_comm = px.pie(names=top_comm.index, values=top_comm.values, hole=0.4, title="Top 10 Commodities")
             fig_comm.update_layout(**layout)
 
-        # Price Type Chart
         if 'pricetype' in df.columns and not df['pricetype'].empty:
             fig_type = px.bar(
                 df['pricetype'].value_counts(),
@@ -78,7 +70,6 @@ class DataPrepPage:
             )
         return fig_comm, fig_type
 
-    # 5. Cache the generation of the "Clean" pie chart (since it's static)
     @st.cache_data(show_spinner=False)
     def _create_clean_pie_chart(_self, layout: dict):
         """Generates and caches the static 100% clean pie chart."""
@@ -111,7 +102,6 @@ class DataPrepPage:
     def render(self):
         st.title("Data Exploration & Preparation")
 
-        # Use the cached method to get the DataFrame
         df = self._get_dataframe()
 
         if df is None or df.empty:
@@ -120,12 +110,10 @@ class DataPrepPage:
 
         st.subheader("1. Handling Missing Values")
 
-        # Use the cached method to get missing values
         missing = self._get_missing_metrics(df)
 
         col1, col2 = st.columns([1, 2])
 
-        # Define common layout parameters (can't cache this dictionary as it's defined inside render)
         common_layout = dict(
             plot_bgcolor="#FFFFFF",
             paper_bgcolor="#FFFFFF",
@@ -142,19 +130,19 @@ class DataPrepPage:
         with col1:
             if not missing.empty:
                 st.write("Missing values count per column:")
-                # Display the data (quick operation)
+
                 st.dataframe(missing)
             else:
                 st.success(" No missing values found! The dataset has been cleaned by the DataManager pipeline.")
 
         with col2:
             if not missing.empty:
-                # Use cached chart creation method
+
                 fig = self._create_missing_bar_chart(missing, common_layout)
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.info("Visualizing Data Integrity:")
-                # Use cached chart creation method
+
                 fig = self._create_clean_pie_chart(common_layout)
                 st.plotly_chart(fig, use_container_width=True)
 
@@ -168,7 +156,6 @@ class DataPrepPage:
 
         st.subheader("2. Categorical Distributions")
 
-        # Use the cached method to get both charts at once
         fig_comm, fig_type = self._create_categorical_charts(df, common_layout)
 
         col_a, col_b = st.columns(2)

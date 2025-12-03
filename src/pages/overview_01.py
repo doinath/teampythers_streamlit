@@ -3,7 +3,6 @@ import plotly.express as px
 import pandas as pd
 import base64
 import os
-from pathlib import Path
 
 class OverviewPage:
     def __init__(self, data_manager):

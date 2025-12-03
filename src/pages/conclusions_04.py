@@ -10,22 +10,18 @@ class ConclusionsPage:
         st.markdown(
             "Explore the summary of findings and actionable recommendations derived from our machine learning models.")
 
-        # Create the 3 required tabs
         tab_apriori, tab_kmeans, tab_em = st.tabs([
             "Apriori Algorithm",
             "K-means Clustering",
             "EM Clustering"
         ])
 
-        # --- TAB 1: Apriori ---
         with tab_apriori:
             self.render_apriori_content()
 
-        # --- TAB 2: K-Means Clustering (The Focus) ---
         with tab_kmeans:
             self.render_kmeans_content()
 
-        # --- TAB 3: EM Clustering ---
         with tab_em:
             self.render_em_content()
 
@@ -36,8 +32,6 @@ class ConclusionsPage:
         Select a cluster below to dive into the specifics or use the **Policy Simulator** to estimate improvements.
         """)
 
-        # --- DATA PREPARATION FOR INTERACTIVITY ---
-        # Storing content in a dictionary to make the dropdown logic cleaner
         cluster_data = {
             "Cluster A (Mindanao)": {
                 "Title": "The Budget-Friendly Zone",
@@ -94,7 +88,6 @@ class ConclusionsPage:
             }
         }
 
-        # --- INTERACTIVE SECTION 1: Cluster Explorer ---
         st.divider()
         col_sel, col_stat = st.columns([2, 1])
 
@@ -102,13 +95,12 @@ class ConclusionsPage:
             selected_cluster = st.selectbox(
                 " Select a Cluster to Analyze:",
                 list(cluster_data.keys()),
-                index=1  # Default to Visayas to show contrast immediately
+                index=1
             )
 
         data = cluster_data[selected_cluster]
 
         with col_stat:
-            # Display a metric card relevant to the selected cluster
             st.metric(
                 label=data["Metric_Label"],
                 value=data["Metric_Value"],
@@ -116,7 +108,6 @@ class ConclusionsPage:
                 delta_color=data.get("Delta_Color", "normal")
             )
 
-        # Content Layout
         st.subheader(f"{selected_cluster}: {data['Title']}")
         st.caption(f"  Key Areas: {data['Regions']}")
 
@@ -136,7 +127,6 @@ class ConclusionsPage:
             for rec in data["Recommendations"]:
                 st.info(rec)
 
-        # --- INTERACTIVE SECTION 2: UNIQUE FEATURE (Policy Simulator) ---
         st.divider()
         st.subheader(" Interactive Policy Impact Simulator")
         st.markdown("""
@@ -159,8 +149,7 @@ class ConclusionsPage:
             st.caption("Higher investment in RoRo (Visayas) or Cold Storage (Luzon) reduces waste and transport costs.")
 
         with sim_col2:
-            # Logic for the simulation
-            # We know Cluster C has a ~30 peso gap. Let's assume efficiency reduces that gap linearly.
+
             initial_gap_veg = 30.00
             savings = initial_gap_veg * (efficiency_gain / 100)
             new_gap = initial_gap_veg - savings
@@ -187,8 +176,6 @@ class ConclusionsPage:
             else:
                 st.warning("Moderate Impact. Further investment needed to match Cluster A prices.")
 
-    # EM CLUSTERING
-
     def render_em_content(self):
         st.header("The 'Two-Factor' Market Analysis")
         st.markdown("""
@@ -196,7 +183,6 @@ class ConclusionsPage:
         but by **Volatility** (reliability). This creates a "Two-Factor" market segmentation.
         """)
 
-        # --- DATA SETUP ---
         em_clusters = {
             "The Production Havens": {
                 "Subtitle": "Low Price, Low Volatility",
@@ -221,10 +207,21 @@ class ConclusionsPage:
             }
         }
 
-        # --- INTERACTIVE SECTION 1: Market Segment Explorer ---
         st.subheader("1. Regional Segmentation")
 
-        # st.pills will now be colored by your external CSS file
+        white_container = """
+                        <style>
+                        .st-key-c6 {
+                        background-color: #ffffff;
+                        border-radius: 12px;
+                        padding: 20px;
+                        box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+                        }
+                        </style>
+                        """
+
+        st.markdown(white_container, unsafe_allow_html=True)
+
         selected_em = st.pills(
             "Select Market Type to Explore:",
             options=list(em_clusters.keys()),
@@ -237,8 +234,7 @@ class ConclusionsPage:
 
         data = em_clusters[selected_em]
 
-        # Display Content
-        with st.container(border=True):
+        with st.container(border=True, key = "c6"):
             st.markdown(f"### {selected_em}")
             st.caption(f"**Profile:** {data['Subtitle']}")
 
@@ -254,7 +250,6 @@ class ConclusionsPage:
 
         st.divider()
 
-        # --- STATIC SUMMARY SECTION: Price Drivers ---
         st.subheader("2. Price Drivers: Inflation vs. Seasonality")
 
         c1, c2 = st.columns(2)
@@ -272,7 +267,6 @@ class ConclusionsPage:
 
         st.divider()
 
-        # --- INTERACTIVE SECTION 2: UNIQUE FEATURE (Strategy Diagnoser) ---
         st.subheader(" Interactive Feature: Regional Strategy Diagnoser")
         st.markdown("""
         Not sure which category a specific province falls into? 
@@ -297,14 +291,13 @@ class ConclusionsPage:
         with diag_c2:
             st.markdown("### Automated Prescription")
 
-            # LOGIC ENGINE
             if price_input == "Low" and volatility_input == "Stable (Low Volatility)":
                 st.success("Result: **Production Haven**")
                 st.write(
                     " **Strategy:** Minimal Intervention. Monitor to ensure land conversion doesn't reduce supply.")
 
             elif volatility_input == "Unpredictable (High Volatility)":
-                # High volatility automatically flags as High Risk regardless of price
+
                 st.error("Result: **High-Risk Zone**")
                 st.write(
                     " **Strategy:** **Targeted Infrastructure.** Invest in cold storage and RoRo transport to smooth out the supply spikes.")
@@ -317,7 +310,7 @@ class ConclusionsPage:
                 st.caption("Matches Recommendation #3")
 
             else:
-                # Moderate/Moderate case
+
                 st.warning("Result: **Transition Market**")
                 st.write(
                     " **Strategy:** Proactive Seasonal Management. Implement buffer stocking during lean months.")
@@ -331,14 +324,25 @@ class ConclusionsPage:
         revealing how inflation spreads geographically and across product categories.
         """)
 
-        # --- SECTION 1: VISUAL SUMMARY OF FINDINGS ---
         st.subheader("1. Key Takeaways")
+        white_container = """
+        <style>
+        .st-key-c1, .st-key-c2, .st-key-c3, .st-key-c4,
+        .st-key-c5 {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+        }
+        </style>
+        """
 
-        # Using columns to create "Card-like" summaries
+        st.markdown(white_container, unsafe_allow_html=True)
+
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            with st.container(border=True):
+            with st.container(border=True, key="c1"):
                 st.markdown("#### Market Contagion")
                 st.caption("Geography")
                 st.info(
@@ -346,7 +350,7 @@ class ConclusionsPage:
                 st.markdown("`Hubs` $\\to$ `Dependents`")
 
         with col2:
-            with st.container(border=True):
+            with st.container(border=True, key="c2"):
                 st.markdown("#### Substitution Effect")
                 st.caption("Cross-Category")
                 st.warning(
@@ -354,7 +358,7 @@ class ConclusionsPage:
                 st.markdown("`Pork High` $\\to$ `Fish High`")
 
         with col3:
-            with st.container(border=True):
+            with st.container(border=True, key="c3"):
                 st.markdown("#### Regional Clustering")
                 st.caption("Containment")
                 st.success(
@@ -363,12 +367,10 @@ class ConclusionsPage:
 
         st.divider()
 
-        # --- SECTION 2: INTERACTIVE FEATURE - INFLATION CHAIN SIMULATOR ---
         st.subheader(" Interactive Feature: The Inflation Chain Simulator")
         st.markdown(
             "Select a real-world scenario identified by the model to see how the price shock travels and how to stop it.")
 
-        # Scenario Selector using Pills
         scenario_type = st.pills(
             "Select a Contagion Type:",
             ["Geographic Contagion (Region to Region)", "Substitution Effect (Product to Product)"],
@@ -376,7 +378,6 @@ class ConclusionsPage:
             selection_mode="single"
         )
 
-        # Dynamic Content based on selection
         c1, c2 = st.columns([1, 1])
 
         if scenario_type == "Geographic Contagion (Region to Region)":
@@ -403,8 +404,7 @@ class ConclusionsPage:
                 st.error(f"**Prediction:** Rice prices will rise in **{target}** within 1-2 weeks.")
                 st.caption(f"Metric Strength: {impact_level}")
 
-            # Action Card for Geo
-            with st.container(border=True):
+            with st.container(border=True, key = "c4"):
                 st.markdown("### Recommended Action Plan")
                 st.success("**Strategy: Establish 'Trigger-Based' Inventory Releases**")
                 st.markdown(f"""
@@ -412,7 +412,7 @@ class ConclusionsPage:
                 *   **Long Term:** Deploy field inspectors to **Audit Transport Corridors**. If {source_market} and {target} are strongly linked, there is likely a checkpoint or bottleneck on their specific route.
                 """)
 
-        else:  # Substitution Effect
+        else:
             with c1:
                 st.markdown("### The Trigger (Antecedent)")
                 primary_product = st.selectbox(
@@ -428,8 +428,7 @@ class ConclusionsPage:
                 st.error(f"**Prediction:** Demand shifts, causing **{substitute}** prices to spike.")
                 st.caption("Cause: Consumer panic substitution")
 
-            # Action Card for Substitution
-            with st.container(border=True):
+            with st.container(border=True, key = "c5"):
                 st.markdown("### Recommended Action Plan")
                 st.warning("**Strategy: Pre-emptive Subsidies on Substitutes**")
                 st.markdown(f"""
@@ -439,7 +438,6 @@ class ConclusionsPage:
 
         st.divider()
 
-        # --- SECTION 3: UNIQUE FEATURE - POLICY TRIAGE CALCULATOR ---
         st.subheader(" Smart Policy Response Calculator")
         st.markdown("""
         Not all price alerts require the same response. Use the model's metrics (**Lift** and **Frequency**) 
@@ -468,20 +466,17 @@ class ConclusionsPage:
         with col_output:
             st.markdown("### Triage Result")
 
-            # Logic 1: The "Super Spreader" / Circuit Breaker
             if antecedent_freq >= 10:
                 st.error("** Recommendation: Targeted Price Freeze (Circuit Breaker)**")
                 st.write(
                     f"This market appears as a cause in {antecedent_freq} different rules. It is an **Inflation Super-Spreader**.")
                 st.caption("Action: Apply strict price ceilings here to protect all downstream dependents.")
 
-            # Logic 2: High Lift / Budget Allocation
             elif lift_input >= 5.0:
                 st.warning("** Recommendation: Algorithm-Assisted Budget Allocation**")
                 st.write(f"The dependency (Lift {lift_input}x) is extremely strong.")
                 st.caption("Action: Allocate immediate emergency funds here. Prioritize this over lower-lift alerts.")
 
-            # Logic 3: Moderate
             else:
                 st.info("** Recommendation: Standard Surveillance**")
                 st.write("Correlation exists but is not critical yet.")

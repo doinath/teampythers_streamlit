@@ -10,8 +10,8 @@ class OverviewPage:
 
     def render(self):
 
-        css = self._get_cached_css('assets/css/overview.css')
-        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+        # css = self._get_cached_css('assets/css/overview.css')
+        # st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
         st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to 2023")
@@ -254,11 +254,11 @@ class OverviewPage:
 
         return fig_dist
 
-    def inject_css(self, file_name):
-        """Loads a local CSS file and injects it into the Streamlit app."""
-        try:
-            with open(file_name) as f:
-                st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
-        except FileNotFoundError:
-            st.error(f"Error: Could not find '{file_name}'. Ensure it is in the root directory.")
+    # def inject_css(self, file_name):
+    #     """Loads a local CSS file and injects it into the Streamlit app."""
+    #     try:
+    #         with open(file_name) as f:
+    #             st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    #
+    #     except FileNotFoundError:
+    #         st.error(f"Error: Could not find '{file_name}'. Ensure it is in the root directory.")

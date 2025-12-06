@@ -5,7 +5,6 @@
 This project aims to develop an interactive streamlit app for the course subject CS365 Data Analytics and Visualization using the dataset wfp_food_prices_phl.csv or Philippine food prices. 
 
 ### Project Structure
-to be improved... or changed
 ```angular2html
 teampythers_streamlit/
 ├── .gitignore                            # Tells Git to ignore files like venv/ and notes/

@@ -138,10 +138,10 @@ class OverviewPage:
 
             st.subheader("2. Academic Context")
 
-            white_container = """
+            color_container = """
             <style>
             .st-key-my-styled-container {
-                background-color: #f5f5f5;
+                background-color: #537B2FFF;
                 border-radius: 10px;
                 padding: 10px;
                 box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
@@ -149,7 +149,7 @@ class OverviewPage:
             </style>
             """
 
-            st.markdown(white_container, unsafe_allow_html=True)
+            st.markdown(color_container, unsafe_allow_html=True)
 
             with st.container(border=True, key='my-styled-container'):
 

@@ -262,8 +262,6 @@ div[data-testid="stTable"]:hover{
     padding: 20px;
 }
 
-/* --- BUTTON FIXES --- */
-/* Primary Button - Uses bright green for consistency */
 button[kind="primary"] {
     background-color: var(--dark) !important;
     color: var(--deep) !important;
@@ -271,7 +269,6 @@ button[kind="primary"] {
     font-weight: 600;
 }
 
-/* Secondary Button - Uses darker green for consistency */
 button[kind="secondary"] {
     background-color: var(--primary) !important;
     color: var(--accent-text) !important;
@@ -296,11 +293,6 @@ div.stButton > button:focus {
     box-shadow: none !important;
 }
 
-/* ------------------------------------- */
-/* --- 🟢 APRIORI UI FIXES (RED -> GREEN) --- */
-/* ------------------------------------- */
-
-/* 1. Radio Button Fix */
 div[data-testid="stRadio"] label span.e1fb0a1v10 {
     background-color: var(--dark) !important;
     border-color: var(--dark) !important;
@@ -310,7 +302,6 @@ div[data-testid="stRadio"] label.st-bq .e1fb0a1v8 {
     border-color: var(--dark) !important;
 }
 
-/* 2. Multiselect Tag Fix */
 div[data-baseweb="tag"] {
     background-color: var(--primary) !important;
     color: var(--accent-text) !important;
@@ -319,7 +310,6 @@ div[data-baseweb="tag"] > span {
     color: var(--accent-text) !important;
 }
 
-/* 3. Slider Fix */
 .stApp input[type="range"] {
     accent-color: var(--dark) !important;
 }
@@ -346,8 +336,6 @@ input[type="range"]::-moz-range-track {
     height: 6px !important;
     border-radius: 3px;
 }
-
-/* 4. Multiselect/Select Dropdown Fix */
 
 div[data-testid="stMultiSelect"] div[data-baseweb="select"] div[data-baseweb="input"] {
     background-color: var(--card-bg) !important;

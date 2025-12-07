@@ -4,7 +4,6 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import os
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
@@ -128,60 +127,48 @@ def _run_apriori_analysis(df: pd.DataFrame, commodities_list: list, scope: str, 
         return [], "Please select at least one commodity."
 
     df_ap = df[df['pricetype'] == 'Retail'].dropna(subset=['price', 'commodity', 'market']).copy()
-    # Filter for the selected list of commodities
     df_ap = df_ap[df_ap['commodity'].isin(commodities_list)]
 
     if df_ap.empty:
         return [], "No retail data found for the selected commodities."
 
     def categorize_price(x):
-        # Calculate Q3 relative to the specific market and commodity
         if len(x) < 5: return pd.Series([np.nan] * len(x), index=x.index)
         q3 = x.quantile(0.75)
         return x.apply(lambda p: 'High Price' if p >= q3 else 'Normal')
 
-    # Status is based on market-commodity specific price distribution
     df_ap['status'] = df_ap.groupby(['market', 'commodity'])['price'].transform(categorize_price)
     df_high = df_ap[df_ap['status'] == 'High Price'].copy()
 
-    # --- Define Item based on Scope ---
     if scope == "Market-Specific (Cross-Market/Cross-Commodity)":
-        # Finds: (Rice High in Cebu) -> (Rice High in Iloilo) OR (Rice High in Cebu) -> (Wheat High in Cebu)
+
         df_high['item'] = df_high['commodity'] + " is High in " + df_high['market']
 
     elif scope == "Cross-Commodity (Generalized)":
-        # Finds: (Rice is High) -> (Wheat is High) [Market agnostic]
+
         df_high['item'] = df_high['commodity'] + " is High"
 
-    else:  # Should not happen, but as fallback
+    else:
         return [], "Invalid analysis scope selected."
 
     if df_high.empty:
         return [], "No 'High Price' data points available for association mining after filtering."
 
-    # Transactions are defined by date. Use set() to ensure that duplicate items
-    # (only possible in the 'Cross-Commodity' scope if one commodity is high in multiple markets)
-    # are counted only once per day.
     transactions = df_high.groupby('date')['item'].apply(lambda x: list(set(x))).tolist()
     N = len(transactions)
 
-    # Filter transactions to only include dates with two or more unique high items
     transactions = [t for t in transactions if len(t) >= 2]
     N_filtered = len(transactions)
 
-    if N_filtered < 10:  # Increased minimum transactions for more robust rules
+    if N_filtered < 10:
         return [], f"Insufficient daily transactions ({N_filtered}) where two or more items are 'High Price' simultaneously. Try adjusting filters or reducing thresholds."
 
-    # --- Apriori Implementation ---
-
-    # 1. Frequent 1-itemsets
     item_counts = {}
     for trans in transactions:
         for item in trans:
             item_counts[item] = item_counts.get(item, 0) + 1
     frequent_1 = {k: v for k, v in item_counts.items() if v / N_filtered >= min_support}
 
-    # 2. Frequent 2-itemsets
     pair_counts = {}
     for trans in transactions:
         freq_items_in_trans = [i for i in trans if i in frequent_1]
@@ -189,25 +176,22 @@ def _run_apriori_analysis(df: pd.DataFrame, commodities_list: list, scope: str, 
             pair_counts[pair] = pair_counts.get(pair, 0) + 1
     frequent_2 = {k: v for k, v in pair_counts.items() if v / N_filtered >= min_support}
 
-    # 3. Generate Rules
     results = []
     for pair, count in frequent_2.items():
         item_A, item_B = pair
         support_AB = count / N_filtered
 
-        # Rule A -> B
         support_A = frequent_1[item_A] / N_filtered
         conf_A_to_B = support_AB / support_A
         lift_A_to_B = conf_A_to_B / (frequent_1[item_B] / N_filtered)
         if conf_A_to_B >= min_confidence:
             results.append((item_A, item_B, conf_A_to_B, lift_A_to_B))
 
-        # Rule B -> A
         support_B = frequent_1[item_B] / N_filtered
         conf_B_to_A = support_AB / support_B
         lift_B_to_A = conf_B_to_A / (frequent_1[item_A] / N_filtered)
         if conf_B_to_A >= min_confidence:
-            # Check for non-duplication
+
             if (item_B, item_A, conf_B_to_A, lift_B_to_A) not in results:
                 results.append((item_B, item_A, conf_B_to_A, lift_B_to_A))
 
@@ -215,7 +199,6 @@ def _run_apriori_analysis(df: pd.DataFrame, commodities_list: list, scope: str, 
 
     formatted_results = []
     for r in results:
-        # Only apply region label if market-specific scope is used
         ant = _add_region_label(r[0]) if "Market-Specific" in scope else r[0]
         con = _add_region_label(r[1]) if "Market-Specific" in scope else r[1]
         formatted_results.append((ant, con, r[2], r[3]))
@@ -365,48 +348,35 @@ def render_plando_analysis(dm):
         monthly_avg = df_comp.groupby('month_year')['price_php'].mean().reset_index(name='avgPrice')
         monthly_avg['date_for_plot'] = monthly_avg['month_year'].dt.to_timestamp()
 
-        # --- START OF COLOR MODIFICATIONS ---
+        PLOT_BG_COLOR = "#1E2D22"
+        TICK_LABEL_COLOR = "#E4EB9C"
+        TITLE_COLOR = "#537B2F"
+        GRID_COLOR = "#3A4A3A"
 
-        # 1. Define the desired colors based on your layout
-        PLOT_BG_COLOR = "#1E2D22"  # Dark green/black for plot area
-        TICK_LABEL_COLOR = "#E4EB9C"  # Light color for text/axes
-        TITLE_COLOR = "#537B2F"  # Dark-green accent color (we'll make this light for visibility against a dark background)
-        GRID_COLOR = "#3A4A3A"  # A subtle dark grid color
-
-        # Note: For maximum visibility on a dark background, we'll use TICK_LABEL_COLOR for the title too.
-
-        # 2. Set Matplotlib figure and axis properties
         fig, ax = plt.subplots(figsize=(9, 5))
 
-        # Set the figure background (similar to 'paper_bgcolor')
         fig.patch.set_facecolor(PLOT_BG_COLOR)
-        # Set the axes background (similar to 'plot_bgcolor')
         ax.set_facecolor(PLOT_BG_COLOR)
 
         sns.lineplot(x='date_for_plot', y='avgPrice', data=monthly_avg, marker='o', color='#90ce24', ax=ax)
 
-        # 3. Apply Text and Axis colors
         ax.set_title(
             f'Avg Monthly Price Trend for {selected_commodity} (PHP)',
-            color=TICK_LABEL_COLOR  # Use light color for visibility
+            color=TICK_LABEL_COLOR
         )
         ax.set_xlabel('Date', color=TICK_LABEL_COLOR)
         ax.set_ylabel('Average Price (PHP/Unit)', color=TICK_LABEL_COLOR)
 
-        # Set tick colors
         ax.tick_params(axis='x', colors=TICK_LABEL_COLOR)
         ax.tick_params(axis='y', colors=TICK_LABEL_COLOR)
 
-        # Set border/spine colors
         ax.spines['bottom'].set_color(TICK_LABEL_COLOR)
         ax.spines['top'].set_color(TICK_LABEL_COLOR)
         ax.spines['left'].set_color(TICK_LABEL_COLOR)
         ax.spines['right'].set_color(TICK_LABEL_COLOR)
 
-        # Set grid color
         ax.grid(True, linestyle='--', alpha=0.6, color=GRID_COLOR)
 
-        # --- END OF COLOR MODIFICATIONS ---
 
         plt.xticks(rotation=45)
         plt.tight_layout()
@@ -424,41 +394,34 @@ def render_plando_analysis(dm):
 
         st.info(cluster_info)
 
-        # --- START OF COLOR MODIFICATIONS ---
+        PLOT_BG_COLOR = "#1E2D22"
+        TICK_LABEL_COLOR = "#E4EB9C"
+        GRID_COLOR = "#3A4A3A"
 
-        # 1. Define the desired colors (Consistent with the previous plot)
-        PLOT_BG_COLOR = "#1E2D22"  # Dark green/black for plot area
-        TICK_LABEL_COLOR = "#E4EB9C"  # Light color for text/axes
-        GRID_COLOR = "#3A4A3A"  # A subtle dark grid color
-
-        # 2. Set Matplotlib figure and axis properties
         fig_cluster, ax_cluster = plt.subplots(figsize=(9, 5))
 
-        # Set the figure background (similar to 'paper_bgcolor')
+
         fig_cluster.patch.set_facecolor(PLOT_BG_COLOR)
-        # Set the axes background (similar to 'plot_bgcolor')
+
         ax_cluster.set_facecolor(PLOT_BG_COLOR)
 
-        # 3. Scatter Plot using Seaborn
-        # We use 'Set1' palette, which provides distinct colors for clusters
         sns.scatterplot(
             x='avg_price', y='std_price', data=regional_features,
             hue='cluster', palette='Set1', style='cluster', s=100, ax=ax_cluster
         )
 
-        # 4. Apply Text, Tick, and Grid colors
         for i in range(regional_features.shape[0]):
             ax_cluster.text(
                 regional_features['avg_price'][i] * 1.01,
                 regional_features['std_price'][i] * 1.01,
                 regional_features['region'][i],
                 fontsize=8,
-                color=TICK_LABEL_COLOR  # Set region label color
+                color=TICK_LABEL_COLOR
             )
 
         ax_cluster.set_title(
             f'Regional Price Segments for {selected_commodity}',
-            color=TICK_LABEL_COLOR  # Set title color
+            color=TICK_LABEL_COLOR
         )
         ax_cluster.set_xlabel('Average Price (PHP)', color=TICK_LABEL_COLOR)
         ax_cluster.set_ylabel('Price Volatility (Standard Deviation)', color=TICK_LABEL_COLOR)
@@ -467,17 +430,13 @@ def render_plando_analysis(dm):
         ax_cluster.tick_params(axis='x', colors=TICK_LABEL_COLOR)
         ax_cluster.tick_params(axis='y', colors=TICK_LABEL_COLOR)
 
-        # Set border/spine colors
         ax_cluster.spines['bottom'].set_color(TICK_LABEL_COLOR)
         ax_cluster.spines['top'].set_color(TICK_LABEL_COLOR)
         ax_cluster.spines['left'].set_color(TICK_LABEL_COLOR)
         ax_cluster.spines['right'].set_color(TICK_LABEL_COLOR)
 
-        # Apply grid
         ax_cluster.grid(True, linestyle='--', alpha=0.6, color=GRID_COLOR)
 
-        # NOTE: Legend text color is often difficult to style directly via Matplotlib's API.
-        # If the legend text remains white, it should still be legible.
 
         plt.tight_layout()
 
@@ -505,7 +464,6 @@ def render_julian_analysis(dm):
     colA, colB, colC = st.columns([1.5, 1, 1])
 
     with colA:
-        # Scope selector to switch between market-specific and generalized cross-commodity
         selected_scope = st.radio(
             "Scope of Analysis:",
             [
@@ -517,7 +475,6 @@ def render_julian_analysis(dm):
 
     colD, colE = st.columns([1.5, 1.5])
     with colD:
-        # Multi-select for commodities, now adjusted based on scope
         if "Generalized" in selected_scope:
             commodity_label = "Target Commodities (Select 2+):"
         else:
@@ -542,7 +499,6 @@ def render_julian_analysis(dm):
 
     st.markdown("---")
 
-    # Guidance based on selected scope
     if "Market-Specific" in selected_scope:
         st.info(
             "**Market-Specific:** Rules link specific items in specific markets (e.g., *Rice High in Cebu* $\implies$ *Wheat High in Cebu* OR *Rice High in Iloilo*).")

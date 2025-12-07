@@ -97,6 +97,28 @@ class OverviewPage:
                 filter_limit = df['price'].quantile(0.95)
                 fig_dist = self._get_cached_price_distribution_chart(df, filter_limit)
 
+                custom_layout_updates = dict(
+
+                    plot_bgcolor="#1E2D22",
+                    paper_bgcolor="#1E2D22",
+
+                    font=dict(color="#E4EB9C"),
+
+                    title=dict(
+                        font=dict(
+                            color="#537B2F"
+                        )
+                    ),
+
+                    legend=dict(
+                        bgcolor="rgba(30, 45, 34, 0.7)",
+                        bordercolor="#537B2F",
+                        borderwidth=1
+                    )
+                )
+
+                fig_dist.update_layout(custom_layout_updates)
+
                 st.plotly_chart(fig_dist, use_container_width=True)
 
                 st.caption(

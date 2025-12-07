@@ -10,9 +10,6 @@ class OverviewPage:
 
     def render(self):
 
-        # css = self._get_cached_css('assets/css/overview.css')
-        # st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
-
         st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to 2023")
 
@@ -138,6 +135,7 @@ class OverviewPage:
 
             st.subheader("2. Academic Context")
 
+
             color_container = """
             <style>
             .st-key-my-styled-container {
@@ -145,6 +143,7 @@ class OverviewPage:
                 border-radius: 10px;
                 padding: 10px;
                 box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+                border: #7ebb48 solid 1px;
             }
             </style>
             """

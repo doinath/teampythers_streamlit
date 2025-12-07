@@ -330,3 +330,57 @@ div.stButton > button:focus {
     outline: none !important;
     box-shadow: none !important;
 }
+
+
+/* ------------------------------------- */
+/* --- 🟢 APRIORI UI FIXES (RED -> GREEN) --- */
+/* ------------------------------------- */
+
+/* 1. Radio Button (Scope of Analysis) */
+/* The selected radio button dot */
+input[type="radio"]:checked:after {
+  background-color: var(--light) !important; /* Use bright accent green */
+}
+/* The selected radio button border */
+input[type="radio"]:checked {
+  border-color: var(--light) !important; /* Use bright accent green */
+}
+
+/* 2. Multiselect Tags (Anchovies, Bananas) */
+/* The background of the selected tag: Streamlit uses an element with data-testid="stMultiSelect" */
+div[data-baseweb="tag"] {
+    background-color: var(--primary) !important; /* Use primary green for background */
+    color: var(--accent-text) !important; /* Ensure text is white */
+}
+/* Ensure the close button uses the same color (it often inherits, but we ensure it) */
+div[data-baseweb="tag"] > span {
+    color: var(--accent-text) !important;
+}
+
+
+/* 3. Sliders (Minimum Thresholds) */
+/* Modern browsers use accent-color for the slider thumb and filled track portion */
+/* We target the containing element to affect all form elements within the app */
+.stApp {
+    /* Sets the highlight color for sliders, checkboxes, and radio buttons */
+    accent-color: var(--light) !important;
+}
+
+/* --- REMOVING OLD, GENERIC/INCORRECT FIXES ---
+   These lines were previously added but are either generic or now redundant
+   due to the use of proper Streamlit/Baseweb selectors above.
+*/
+/* .target-commodity-tag {
+  background-color: #4CAF50;
+  color: white;
+}
+.target-commodity-tag .close-icon {
+  color: white;
+}
+input[type="range"].custom-slider-class .range-filled {
+  background-color: #4CAF50;
+}
+.your-form-container {
+  accent-color: #4CAF50;
+}
+*/

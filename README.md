@@ -11,8 +11,6 @@ teampythers_streamlit/
 ├── assets/                               # For static resources like CSS and images
 │   │   ├── css/                          # Directory for the .css files
 │   │   │   ├── style.css                 # Custom styling for the overall app
-│   │   │   ├── overview.css              # Custom styling for the overview_01.py page
-│   │   │   ├── app_controller.css        # Custom styling for the app_controller.py page
 │   │   ├── images/                       # Directory for the images
 │   │   │   ├── julian.png                # .png for profile
 │   │   │   ├── kyle.png                  # .png for profile

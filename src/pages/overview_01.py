@@ -10,8 +10,8 @@ class OverviewPage:
 
     def render(self):
 
-        css = self._get_cached_css('assets/css/overview.css')
-        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+        # css = self._get_cached_css('assets/css/overview.css')
+        # st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
         st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to 2023")
@@ -138,10 +138,10 @@ class OverviewPage:
 
             st.subheader("2. Academic Context")
 
-            white_container = """
+            color_container = """
             <style>
             .st-key-my-styled-container {
-                background-color: #f5f5f5;
+                background-color: #537B2FFF;
                 border-radius: 10px;
                 padding: 10px;
                 box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
@@ -149,7 +149,7 @@ class OverviewPage:
             </style>
             """
 
-            st.markdown(white_container, unsafe_allow_html=True)
+            st.markdown(color_container, unsafe_allow_html=True)
 
             with st.container(border=True, key='my-styled-container'):
 
@@ -254,11 +254,11 @@ class OverviewPage:
 
         return fig_dist
 
-    def inject_css(self, file_name):
-        """Loads a local CSS file and injects it into the Streamlit app."""
-        try:
-            with open(file_name) as f:
-                st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
-        except FileNotFoundError:
-            st.error(f"Error: Could not find '{file_name}'. Ensure it is in the root directory.")
+    # def inject_css(self, file_name):
+    #     """Loads a local CSS file and injects it into the Streamlit app."""
+    #     try:
+    #         with open(file_name) as f:
+    #             st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    #
+    #     except FileNotFoundError:
+    #         st.error(f"Error: Could not find '{file_name}'. Ensure it is in the root directory.")

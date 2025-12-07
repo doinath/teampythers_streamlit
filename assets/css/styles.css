@@ -1,269 +1,322 @@
-/* =================================================================================
-   1. GLOBAL VARIABLES & PALETTES
-   ================================================================================= */
+:root{
+  /* --- COLOR PALETTE (Darker Greens) --- */
+  --primary: #537B2F; /* Primary active green */
+  --mid: #8DA750;     /* Mid-tone active green */
+  --light: #90ce24;    /* Bright accent green */
+  --deep: #0D1A0D;     /* Deep Forest Floor */
+  --accent-text: #ffffff;
+  --button-color: #000000;
 
- /*--- LIGHT THEME (DEFAULT) ---*/
-:root {
-    /* Palette: #537B2F (Primary), #8DA750 (Mid), #E4EB9C (Light) */
+  /* --- BACKGROUNDS (Deep and Dark) --- */
+  --main-bg-gradient: linear-gradient(135deg,var(--deep) 0%, #142C14 100%);
+  --sidebar-bg-gradient: linear-gradient(180deg,#071007 0%,var(--deep) 100%);
+  --text-main: #ffffff;
+  --text-sidebar: var(--light);
+  --header-color: var(--light); /* Headers are bright green */
 
-    /* Backgrounds */
-    --main-bg-gradient: linear-gradient(130deg, #537B2F 0%, #E4EB9C 70%);
+  /* --- CARD & METRICS (Darker Glass) --- */
+  --card-bg: rgba(45, 81, 40, 0.85); /* Darker, semi-transparent green */
+  --card-border: var(--primary);
+  --card-blur: 12px;
+  --metric-value: var(--accent-text);
+  --metric-label: var(--light); /* Metric labels are light green */
 
-/* Sidebar: Fades from Mid Green to Light Green
---sidebar-bg-gradient: linear-gradient(70deg, #142C14 0%, #537B2F 70%);
-
-    /* Text Colors */
-    --text-main: #142C14;           /* Dark Jungle Green (High Contrast on Light BG) */
-    --text-sidebar: #E4EB9C;        /* Light Green (High Contrast on Dark Sidebar) */
-    --header-color: #2D5128;
-
-    /* Components */
-    --card-bg: rgba(255, 255, 255, 0.85);
-    --card-border: #8DA750;
-    --metric-value: #2D5128;
-    --metric-label: #142C14;
+  /* --- TABS --- */
+  --tab-bg: rgba(83,123,47,0.20);
+  --tab-radius: 10px;
+  --tab-padding: 10px 22px;
+  --tab-text-size: 1.05rem;
+  --tab-underline-thickness: 3px;
+  --shadow-soft: 0 6px 18px rgba(0,0,0,0.3);
+  --shadow-pop: 0 12px 30px rgba(0,0,0,0.4);
+  --transition-fast: 180ms;
 }
 
-/* --- DARK THEME (SYSTEM OVERRIDE) --- */
-@media (prefers-color-scheme: light) {
-    :root {
-        /* Palette: #142C14 (Deep), #2D5128 (Mid), #537B2F (Highlight) */
-
-        /* Backgrounds */
-        --main-bg-gradient: linear-gradient(135deg, #142C14 0%, #2D5128 100%);
-        --sidebar-bg-gradient: linear-gradient(180deg, #0E1F0E 0%, #142C14 100%);
-
-        /* Text Colors */
-        --text-main: #E4EB9C;       /* Light Green text on Dark BG */
-        --text-sidebar: #8DA750;    /* Mid Green text on Dark Sidebar */
-        --header-color: #8DA750;
-
-        /* Components */
-        --card-bg: rgba(45, 81, 40, 0.4); /* Glassy Dark Green */
-        --card-border: #537B2F;
-        --metric-value: #FFFFFF;
-        --metric-label: #E4EB9C;
-    }
+/* LAYOUT */
+.stApp{
+  background: var(--main-bg-gradient) !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  color: var(--text-main) !important;
+  font-family: Inter, system-ui, -apple-system, "Helvetica Neue", Arial;
 }
 
-/* =================================================================================
-   2. MAIN LAYOUT STYLING
-   ================================================================================= */
-
-/* 1. Main Application Background */
-.stApp {
-    background: var(--main-bg-gradient) !important;
-    background-attachment: fixed !important;
-    background-size: cover;
+/* SIDEBAR */
+section[data-testid="stSidebar"]{
+  background: var(--sidebar-bg-gradient) !important;
+  border-right: 1px solid var(--card-border);
+  color: var(--text-sidebar);
+  padding: 1.25rem;
 }
 
-/* 2. Sidebar Background */
-section[data-testid="stSidebar"] {
-    background: var(--sidebar-bg-gradient) !important;
-    border-right: 1px solid var(--card-border);
+/* GENERAL TEXT */
+p, label, li, .stMarkdown, .stDataFrame, .stTable{
+  color: var(--text-main) !important;
+  line-height: 1.45;
 }
 
-/* 3. General Text Styling */
-p, label, li, .stMarkdown, .stDataFrame, .stTable {
-    color: var(--text-main) !important;
+/* HEADINGS */
+h1,h2,h3,h4,h5,h6{
+  color: var(--header-color) !important;
+  font-weight: 700;
+  margin: 0.25rem 0;
 }
 
-/* 4. Headers */
-h1, h2, h3, h4, h5, h6 {
-    color: var(--header-color) !important;
-    background: transparent;
-    font-weight: 700;
-}
-
-/* =================================================================================
-   3. COMPONENT STYLING
-   ================================================================================= */
-
-/* 1. Metric Cards (Glassmorphism) */
-div[data-testid="stMetric"] {
-    background-color: var(--card-bg);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--card-border);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-div[data-testid="stMetricLabel"] p {
-    color: var(--metric-label) !important;
-    font-weight: 600;
-}
-
-div[data-testid="stMetricValue"] {
-    color: var(--metric-value) !important;
-}
-
-/*2. Tables & DataFrames*/
-div[data-testid="stDataFrame"], div[data-testid="stTable"] {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 5px;
-}
-
-/* 3. Header/Navbar (Transparent) */
-header[data-testid="stHeader"] {
-    background-color: transparent !important;
-}
-
-/* 4. Expander Headers */
-.streamlit-expanderHeader {
-    background-color: var(--card-bg) !important;
-    color: var(--text-main) !important;
-    border: 1px solid var(--card-border);
-    border-radius: 5px;
-}
-
-/* =================================================================================
-   4. SIDEBAR SPECIFIC ELEMENTS
-   ================================================================================= */
-
-/* A. Sidebar Title */
-section[data-testid="stSidebar"] h1 {
-    color: #E4EB9C !important;      /* Always Light because Sidebar is always Dark */
-    font-size: 2.5rem !important;
-    font-family: 'Helvetica', sans-serif !important;
-    font-weight: 800 !important;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    margin-bottom: 0px !important;
-}
-
-/* B. Sidebar Caption */
-section[data-testid="stSidebar"] .stCaption {
-    color: #E4EB9C !important;
-    font-size: 1.1rem !important;
-    font-style: italic !important;
-    margin-top: -10px !important;
-}
-
-/* C. Divider Line */
-section[data-testid="stSidebar"] hr {
-    margin: 1.5em 0 !important;
-    border-color: #8DA750 !important;
-    opacity: 0.5;
-}
-
-/* D. Radio Buttons (Navigation) */
-section[data-testid="stSidebar"] div[data-testid="stRadio"] label {
-    font-size: 1.2rem !important;
-    font-weight: bold !important;
-    color: var(--text-sidebar) !important;
-}
-
-section[data-testid="stSidebar"] div[data-testid="stRadio"] div[role="radiogroup"] p {
-    font-size: 1.1rem !important;
-    font-weight: 500 !important;
-    padding: 5px 0;
-    color: var(--text-sidebar) !important;
-}
-
-/* E. Info/Alert Box */
-section[data-testid="stSidebar"] div[data-testid="stAlert"] {
-    /*background-color: #8DA750 !important; !* Darker transparent bg *!*/
-    border: 0px solid #8DA750 !important;
-    color: #E4EB9C !important;
-    font-size: 0.9rem !important;
-    border-radius: 10px;
-}
-
-/* =================================================================================
-   5. TAB STYLING (PROJECT & DATA DICTIONARY)
-   ================================================================================= */
-
- /*1. The Tab Container */
-div[data-baseweb="tab-list"] {
-    gap: 10px; /* Adds space between tabs */
-    border-bottom: none !important;
-    box-shadow: none !important;
-}
-
- /*2. The Tab Buttons (Unselected) */
-button[data-baseweb="tab"] {
-    background-color: rgba(255, 255, 255, 0.2) !important; /* Subtle background */
-    border-radius: 8px !important;
-    border: 1px solid transparent !important;
-    padding: 10px 20px !important;
-    transition: all 0.3s ease !important;
-}
-
-/* 3. The Text Inside the Tabs */
-button[data-baseweb="tab"] div p {
-    font-weight: 800 !important;      /* Make it BOLD */
-    font-size: 1.1rem !important;     /* Make it slightly Bigger */
-    color: var(--header-color) !important; /* Uses your Theme Green */
-    text-shadow: 0px 0px 1px rgba(0,0,0,0.1);
-}
-
-/* 4. The Active (Selected) Tab */
-button[data-baseweb="tab"][aria-selected="true"] {
-    background-color: var(--card-bg) !important; /* Matches your card glass effect */
-    /*border: 3px solid var(--card-border) !important;*/
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
-}
-
-/* 5. Text Color for Active Tab */
-button[data-baseweb="tab"][aria-selected="true"] div p {
-    color: #537B2F !important; /* Forces the Primary Green */
-}
-
-/* --- DARK MODE SPECIFIC --- */
-@media (prefers-color-scheme: light) {
-    /* Make text lighter in dark mode so it stands out */
-    button[data-baseweb="tab"] div p {
-        color: #E4EB9C !important; /* Lightest Green */
-    }
-
-    button[data-baseweb="tab"][aria-selected="true"] {
-        background-color: rgba(83, 123, 47, 0.3) !important;
-    }
-}
-
-/* =================================================================================
-   6. CARD HOVER EFFECTS (INTERACTIVITY)
-   ================================================================================= */
-
-/* 1. Define the Transition (Make it smooth) */
+/* CARDS / METRICS (MEDIUM GLOSS) */
 div[data-testid="stMetric"],
 div[data-testid="stDataFrame"],
 div[data-testid="stTable"],
-.streamlit-expanderHeader {
-    transition: all 0.3s ease-in-out !important; /* Smooth animation speed */
+.streamlit-expanderHeader{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(var(--card-blur));
+  transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast) ease, border-color var(--transition-fast) ease;
 }
 
-/* 2. The Hover Action (Lift up + Shadow + Glow) */
+/* METRIC LABEL / VALUE */
+div[data-testid="stMetricLabel"] p{ color: var(--metric-label) !important; font-weight: 600; margin:0; }
+div[data-testid="stMetricValue"]{ color: var(--metric-value) !important; font-size: 1.3rem; font-weight:700; }
+
+/* TABLES / DATAFRAMES */
+div[data-testid="stDataFrame"], div[data-testid="stTable"]{
+  padding: 10px !important;
+}
+
+/* HEADER */
+header[data-testid="stHeader"]{ background: transparent !important; }
+
+/* EXPANDER */
+.streamlit-expanderHeader{
+  cursor: pointer;
+}
+
+/* SIDEBAR TYPOGRAPHY */
+section[data-testid="stSidebar"] h1{
+  color: var(--light) !important;
+  font-size: 2.2rem !important;
+  font-weight: 800 !important;
+  margin-bottom: 6px !important;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.45);
+}
+section[data-testid="stSidebar"] .stCaption{
+  color: var(--light) !important;
+  font-size: 1.02rem !important;
+  margin-top: -6px;
+}
+
+/* RADIO / NAV in SIDEBAR */
+section[data-testid="stSidebar"] div[data-testid="stRadio"] label{
+  color: var(--text-sidebar) !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+}
+section[data-testid="stSidebar"] div[data-testid="stRadio"] div[role="radiogroup"] p{
+  color: var(--text-sidebar) !important;
+  font-size: 1rem !important;
+}
+
+/* ALERTS */
+section[data-testid="stSidebar"] div[data-testid="stAlert"]{
+  border-radius: 10px;
+  color: var(--light) !important;
+}
+
+/* UNIVERSAL TABS — UNIFY ALL STREAMLIT TAB VARIANTS */
+div[data-baseweb="tab-list"],
+div[role="tablist"]{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:6px 0;
+  margin-bottom:8px;
+  border-bottom:none !important;
+}
+
+/* Base tab appearance (covers multiple streamlit/baseweb variants) */
+button[data-baseweb="tab"],
+button[data-baseweb="tabs-base-tab"],
+div[role="tab"],
+button[data-baseweb="tab"] > div,
+button[data-baseweb="tabs-base-tab"] > div{
+  background: var(--tab-bg) !important;
+  border-radius: var(--tab-radius) !important;
+  border: 1px solid transparent !important;
+  padding: var(--tab-padding) !important;
+  cursor: pointer;
+  transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast) ease, background var(--transition-fast) ease;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* Tab text */
+button[data-baseweb="tab"] div p,
+button[data-baseweb="tabs-base-tab"] div p,
+div[role="tab"] p{
+  margin:0;
+  font-weight:800 !important;
+  font-size: var(--tab-text-size) !important;
+  color: var(--header-color) !important;
+  letter-spacing: .2px;
+  line-height:1;
+  text-shadow: 0 0 1px rgba(0,0,0,0.06);
+}
+
+/* hover for tabs */
+button[data-baseweb="tab"]:hover,
+button[data-baseweb="tabs-base-tab"]:hover,
+div[role="tab"]:hover{
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Active tab: background highlight + underline indicator */
+button[data-baseweb="tab"][aria-selected="true"],
+button[data-baseweb="tabs-base-tab"][aria-selected="true"],
+div[role="tab"][aria-selected="true"]{
+  background: var(--card-bg) !important;
+  box-shadow: var(--shadow-pop) !important;
+  border: 1px solid var(--card-border) !important;
+  position: relative;
+}
+
+/* Underline indicator: centered at bottom of active tab */
+button[data-baseweb="tab"][aria-selected="true"]::after,
+button[data-baseweb="tabs-base-tab"][aria-selected="true"]::after,
+div[role="tab"][aria-selected="true"]::after{
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  height: var(--tab-underline-thickness);
+  bottom: -8px;
+  border-radius: 6px;
+  background: linear-gradient(90deg,var(--primary),var(--mid));
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+}
+
+/* Active tab text color emphasized */
+button[data-baseweb="tab"][aria-selected="true"] div p,
+button[data-baseweb="tabs-base-tab"][aria-selected="true"] div p,
+div[role="tab"][aria-selected="true"] p{
+  color: var(--primary) !important;
+  font-weight: 900 !important;
+}
+
+/* 🟢 Styling for INACTIVE tabs */
+button[data-baseweb="tab"]:not([aria-selected="true"]),
+button[data-baseweb="tabs-base-tab"]:not([aria-selected="true"]),
+div[role="tab"]:not([aria-selected="true"]){
+  background: var(--deep) !important;
+  border: 1px solid var(--deep) !important;
+  box-shadow: none !important;
+}
+
+/* 🟢 Ensure the text is visible on inactive tabs */
+button[data-baseweb="tab"]:not([aria-selected="true"]) div p,
+button[data-baseweb="tabs-base-tab"]:not([aria-selected="true"]) div p,
+div[role="tab"]:not([aria-selected="true"]) p{
+    color: var(--text-sidebar) !important;
+}
+
+/* CARD / EXPANDER HOVER POP */
 div[data-testid="stMetric"]:hover,
 div[data-testid="stDataFrame"]:hover,
-div[data-testid="stTable"]:hover {
-    transform: translateY(-5px) scale(1.01) !important; /* Move up 5px and grow slightly */
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2) !important; /* Deeper shadow for 3D effect */
-    border-color: #537B2F !important; /* Highlight border with Primary Green */
-    z-index: 10; /* Ensure it floats above other elements */
+div[data-testid="stTable"]:hover{
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--shadow-pop);
+  border-color: var(--light);
+  z-index: 6;
 }
 
-/* 3. Special Hover for Expanders */
-.streamlit-expanderHeader:hover {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    color: #537B2F !important;
-    border-color: #537B2F !important;
+/* expander hover */
+.streamlit-expanderHeader:hover{
+  transform: translateY(-3px);
+  background: var(--card-bg);
+  color: var(--light);
+  border-color: var(--light);
 }
 
-/* --- DARK MODE HOVER OVERRIDES --- */
-@media (prefers-color-scheme: light) {
-    div[data-testid="stMetric"]:hover,
-    div[data-testid="stDataFrame"]:hover {
-        background-color: rgba(45, 81, 40, 0.8) !important; /* Make card less transparent on hover */
-        border-color: #E4EB9C !important; /* Highlight with Light Green */
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5) !important; /* Stronger dark shadow */
-    }
-
-    .streamlit-expanderHeader:hover {
-        background-color: rgba(45, 81, 40, 0.9) !important;
-        color: #E4EB9C !important;
-    }
+/* small responsive tweaks */
+@media (max-width:720px){
+  :root{ --tab-padding: 8px 12px; --tab-text-size: 0.98rem; }
+  div[data-baseweb="tab-list"]{ gap:8px; }
+  button[data-baseweb="tab"], button[data-baseweb="tabs-base-tab"], div[role="tab"]{ padding: var(--tab-padding) !important; }
 }
 
+
+.team-card {
+     background: #537B2FFF;
+     padding: 20px;
+     border-radius: 15px;
+     text-align: center;
+     box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+     transition: transform 0.5s ease;
+    height: 280px;
+}
+
+.team-card:hover {
+    transform: scale(1.05);
+}
+
+.team-card img {
+     width: 140px;
+     height: 140px;
+     object-fit: cover;
+     border-radius: 50%;
+     border: 4px solid #000000;
+     margin-bottom: 10px;
+}
+.team-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f0e8e8;
+    height: 15px;
+}
+
+.team-role {
+    font-size: 14px;
+    margin-top: 40px;
+    color: #f0e8e8;
+}
+
+.my-styled-container {
+    background-color:  #f5f5f5;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+
+button[kind="primary"] {
+    background-color: #225d25 !important;
+    color: white !important;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+button[kind="secondary"] {
+    background-color: #2E7D32 !important;
+    color: #333 !important;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+div.stButton > button:hover {
+    transform: scale(1.03);
+    transition: 0.1s ease;
+}
+
+div.stButton > button {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+div.stButton > button:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}

@@ -4,6 +4,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import os
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
@@ -18,8 +19,14 @@ class AnalysisPage:
     def __init__(self, data_manager):
         self.dm = data_manager
 
+
     def render(self):
         st.title(" Consolidated Market Analysis Dashboard")
+
+        with open('assets/css/analysis.css') as f:
+            css = f.read()
+
+        st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
         tab_sherielyn, tab_plando, tab_julian = st.tabs([
             "1. K-Means Clustering",

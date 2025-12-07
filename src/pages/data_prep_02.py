@@ -72,7 +72,7 @@ class DataPrepPage:
 
     @st.cache_data(show_spinner=False)
     def _create_clean_pie_chart(_self, layout: dict):
-        """Generates and caches the static 100% clean pie chart."""
+        """ Generates and caches the static 100% clean pie chart."""
         dummy_data = pd.DataFrame({'Status': ['Filled Data', 'Missing'], 'Count': [100, 0]})
 
         fig = px.pie(

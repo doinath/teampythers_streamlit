@@ -115,9 +115,11 @@ class DataPrepPage:
         col1, col2 = st.columns([1, 2])
 
         common_layout = dict(
-            plot_bgcolor="#FFFFFF",
-            paper_bgcolor="#FFFFFF",
-            font=dict(color="#2D5128"),
+            plot_bgcolor="#1E2D22",
+            paper_bgcolor="#1E2D22",
+
+            font=dict(color="#E4EB9C"),
+
             title=dict(
                 font=dict(
                     size=18,

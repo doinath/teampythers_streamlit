@@ -248,8 +248,11 @@ div[data-testid="stTable"]:hover{
 }
 
 
+/* --- NEW CUSTOM STYLES --- */
+
+/* Team Cards */
 .team-card {
-     background: #537B2FFF;
+     background: #537B2FFF; /* Uses the same color as --primary */
      padding: 20px;
      border-radius: 15px;
      text-align: center;
@@ -277,19 +280,24 @@ div[data-testid="stTable"]:hover{
     height: 15px;
 }
 
+
 .team-role {
     font-size: 14px;
     margin-top: 40px;
     color: #f0e8e8;
+    /*height: #7ebb48; <- This line is commented out as it's invalid CSS */
 }
 
+/* Custom Styled Container */
 .my-styled-container {
-    background-color:  #f5f5f5;
+    /* Changed to match Dark Forest theme - using a dark variant */
+    background-color: var(--card-bg);
     border-radius: 10px;
     padding: 20px;
 }
 
 
+/* Primary Button */
 button[kind="primary"] {
     background-color: #225d25 !important;
     color: white !important;
@@ -297,13 +305,15 @@ button[kind="primary"] {
     font-weight: 600;
 }
 
+/* Secondary Button */
 button[kind="secondary"] {
     background-color: #2E7D32 !important;
-    color: #333 !important;
+    color: #333 !important; /* Note: Black text on dark green might have low contrast */
     border-radius: 8px;
     font-weight: 500;
 }
 
+/* Button Hover and Focus effects */
 div.stButton > button:hover {
     transform: scale(1.03);
     transition: 0.1s ease;

@@ -26,7 +26,6 @@ class StreamlitApp:
 
     def run(self):
         self.inject_css('assets/css/styles.css')
-        self.inject_css('assets/css/analysis.css')
 
         if "current_page" not in st.session_state:
             st.session_state.current_page = "01 Overview"

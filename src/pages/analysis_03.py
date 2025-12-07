@@ -23,11 +23,6 @@ class AnalysisPage:
     def render(self):
         st.title(" Consolidated Market Analysis Dashboard")
 
-        with open('assets/css/analysis.css') as f:
-            css = f.read()
-
-        st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
-
         tab_sherielyn, tab_plando, tab_julian = st.tabs([
             "1. K-Means Clustering",
             "2. EM Clustering & Comparative",

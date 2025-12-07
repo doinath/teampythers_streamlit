@@ -10,9 +10,6 @@ class OverviewPage:
 
     def render(self):
 
-        # css = self._get_cached_css('assets/css/overview.css')
-        # st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
-
         st.title("🇵🇭 Philippine Food Price Analysis")
         st.markdown("### A comprehensive record of food prices from 2000 to 2023")
 
@@ -100,6 +97,28 @@ class OverviewPage:
                 filter_limit = df['price'].quantile(0.95)
                 fig_dist = self._get_cached_price_distribution_chart(df, filter_limit)
 
+                custom_layout_updates = dict(
+
+                    plot_bgcolor="#1E2D22",
+                    paper_bgcolor="#1E2D22",
+
+                    font=dict(color="#E4EB9C"),
+
+                    title=dict(
+                        font=dict(
+                            color="#537B2F"
+                        )
+                    ),
+
+                    legend=dict(
+                        bgcolor="rgba(30, 45, 34, 0.7)",
+                        bordercolor="#537B2F",
+                        borderwidth=1
+                    )
+                )
+
+                fig_dist.update_layout(custom_layout_updates)
+
                 st.plotly_chart(fig_dist, use_container_width=True)
 
                 st.caption(
@@ -138,6 +157,7 @@ class OverviewPage:
 
             st.subheader("2. Academic Context")
 
+
             color_container = """
             <style>
             .st-key-my-styled-container {
@@ -145,6 +165,7 @@ class OverviewPage:
                 border-radius: 10px;
                 padding: 10px;
                 box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+                border: #7ebb48 solid 1px;
             }
             </style>
             """

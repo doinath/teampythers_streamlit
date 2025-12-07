@@ -1,27 +1,23 @@
 :root{
-  /* --- COLOR PALETTE (Darker Greens) --- */
-  --primary: #537B2F; /* Primary active green */
-  --mid: #8DA750;     /* Mid-tone active green */
-  --light: #90ce24;    /* Bright accent green */
-  --deep: #0D1A0D;     /* Deep Forest Floor */
+  --primary: #537B2F;
+  --mid: #8DA750;
+  --dark: #90ce24;
+  --deep: #0D1A0D;
   --accent-text: #ffffff;
   --button-color: #000000;
 
-  /* --- BACKGROUNDS (Deep and Dark) --- */
   --main-bg-gradient: linear-gradient(135deg,var(--deep) 0%, #142C14 100%);
   --sidebar-bg-gradient: linear-gradient(180deg,#071007 0%,var(--deep) 100%);
   --text-main: #ffffff;
-  --text-sidebar: var(--light);
-  --header-color: var(--light); /* Headers are bright green */
+  --text-sidebar: var(--dark);
+  --header-color: var(--dark);
 
-  /* --- CARD & METRICS (Darker Glass) --- */
-  --card-bg: rgba(45, 81, 40, 0.85); /* Darker, semi-transparent green */
+  --card-bg: rgba(45, 81, 40, 0.85);
   --card-border: var(--primary);
   --card-blur: 12px;
   --metric-value: var(--accent-text);
-  --metric-label: var(--light); /* Metric labels are light green */
+  --metric-label: var(--dark);
 
-  /* --- TABS --- */
   --tab-bg: rgba(83,123,47,0.20);
   --tab-radius: 10px;
   --tab-padding: 10px 22px;
@@ -32,7 +28,6 @@
   --transition-fast: 180ms;
 }
 
-/* LAYOUT */
 .stApp{
   background: var(--main-bg-gradient) !important;
   background-attachment: fixed !important;
@@ -41,7 +36,6 @@
   font-family: Inter, system-ui, -apple-system, "Helvetica Neue", Arial;
 }
 
-/* SIDEBAR */
 section[data-testid="stSidebar"]{
   background: var(--sidebar-bg-gradient) !important;
   border-right: 1px solid var(--card-border);
@@ -49,20 +43,17 @@ section[data-testid="stSidebar"]{
   padding: 1.25rem;
 }
 
-/* GENERAL TEXT */
 p, label, li, .stMarkdown, .stDataFrame, .stTable{
   color: var(--text-main) !important;
   line-height: 1.45;
 }
 
-/* HEADINGS */
 h1,h2,h3,h4,h5,h6{
   color: var(--header-color) !important;
   font-weight: 700;
   margin: 0.25rem 0;
 }
 
-/* CARDS / METRICS (MEDIUM GLOSS) */
 div[data-testid="stMetric"],
 div[data-testid="stDataFrame"],
 div[data-testid="stTable"],
@@ -76,38 +67,32 @@ div[data-testid="stTable"],
   transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast) ease, border-color var(--transition-fast) ease;
 }
 
-/* METRIC LABEL / VALUE */
 div[data-testid="stMetricLabel"] p{ color: var(--metric-label) !important; font-weight: 600; margin:0; }
 div[data-testid="stMetricValue"]{ color: var(--metric-value) !important; font-size: 1.3rem; font-weight:700; }
 
-/* TABLES / DATAFRAMES */
 div[data-testid="stDataFrame"], div[data-testid="stTable"]{
   padding: 10px !important;
 }
 
-/* HEADER */
 header[data-testid="stHeader"]{ background: transparent !important; }
 
-/* EXPANDER */
 .streamlit-expanderHeader{
   cursor: pointer;
 }
 
-/* SIDEBAR TYPOGRAPHY */
 section[data-testid="stSidebar"] h1{
-  color: var(--light) !important;
+  color: var(--dark) !important;
   font-size: 2.2rem !important;
   font-weight: 800 !important;
   margin-bottom: 6px !important;
   text-shadow: 0 2px 6px rgba(0,0,0,0.45);
 }
 section[data-testid="stSidebar"] .stCaption{
-  color: var(--light) !important;
+  color: var(--dark) !important;
   font-size: 1.02rem !important;
   margin-top: -6px;
 }
 
-/* RADIO / NAV in SIDEBAR */
 section[data-testid="stSidebar"] div[data-testid="stRadio"] label{
   color: var(--text-sidebar) !important;
   font-size: 1.05rem !important;
@@ -118,13 +103,11 @@ section[data-testid="stSidebar"] div[data-testid="stRadio"] div[role="radiogroup
   font-size: 1rem !important;
 }
 
-/* ALERTS */
 section[data-testid="stSidebar"] div[data-testid="stAlert"]{
   border-radius: 10px;
-  color: var(--light) !important;
+  color: var(--dark) !important;
 }
 
-/* UNIVERSAL TABS — UNIFY ALL STREAMLIT TAB VARIANTS */
 div[data-baseweb="tab-list"],
 div[role="tablist"]{
   display:flex;
@@ -135,7 +118,6 @@ div[role="tablist"]{
   border-bottom:none !important;
 }
 
-/* Base tab appearance (covers multiple streamlit/baseweb variants) */
 button[data-baseweb="tab"],
 button[data-baseweb="tabs-base-tab"],
 div[role="tab"],
@@ -152,7 +134,6 @@ button[data-baseweb="tabs-base-tab"] > div{
   gap:8px;
 }
 
-/* Tab text */
 button[data-baseweb="tab"] div p,
 button[data-baseweb="tabs-base-tab"] div p,
 div[role="tab"] p{
@@ -165,7 +146,6 @@ div[role="tab"] p{
   text-shadow: 0 0 1px rgba(0,0,0,0.06);
 }
 
-/* hover for tabs */
 button[data-baseweb="tab"]:hover,
 button[data-baseweb="tabs-base-tab"]:hover,
 div[role="tab"]:hover{
@@ -173,7 +153,6 @@ div[role="tab"]:hover{
   box-shadow: var(--shadow-soft);
 }
 
-/* Active tab: background highlight + underline indicator */
 button[data-baseweb="tab"][aria-selected="true"],
 button[data-baseweb="tabs-base-tab"][aria-selected="true"],
 div[role="tab"][aria-selected="true"]{
@@ -183,7 +162,6 @@ div[role="tab"][aria-selected="true"]{
   position: relative;
 }
 
-/* Underline indicator: centered at bottom of active tab */
 button[data-baseweb="tab"][aria-selected="true"]::after,
 button[data-baseweb="tabs-base-tab"][aria-selected="true"]::after,
 div[role="tab"][aria-selected="true"]::after{
@@ -198,7 +176,6 @@ div[role="tab"][aria-selected="true"]::after{
   box-shadow: 0 6px 12px rgba(0,0,0,0.12);
 }
 
-/* Active tab text color emphasized */
 button[data-baseweb="tab"][aria-selected="true"] div p,
 button[data-baseweb="tabs-base-tab"][aria-selected="true"] div p,
 div[role="tab"][aria-selected="true"] p{
@@ -206,7 +183,6 @@ div[role="tab"][aria-selected="true"] p{
   font-weight: 900 !important;
 }
 
-/* 🟢 Styling for INACTIVE tabs */
 button[data-baseweb="tab"]:not([aria-selected="true"]),
 button[data-baseweb="tabs-base-tab"]:not([aria-selected="true"]),
 div[role="tab"]:not([aria-selected="true"]){
@@ -215,32 +191,28 @@ div[role="tab"]:not([aria-selected="true"]){
   box-shadow: none !important;
 }
 
-/* 🟢 Ensure the text is visible on inactive tabs */
 button[data-baseweb="tab"]:not([aria-selected="true"]) div p,
 button[data-baseweb="tabs-base-tab"]:not([aria-selected="true"]) div p,
 div[role="tab"]:not([aria-selected="true"]) p{
     color: var(--text-sidebar) !important;
 }
 
-/* CARD / EXPANDER HOVER POP */
 div[data-testid="stMetric"]:hover,
 div[data-testid="stDataFrame"]:hover,
 div[data-testid="stTable"]:hover{
   transform: translateY(-6px) scale(1.01);
   box-shadow: var(--shadow-pop);
-  border-color: var(--light);
+  border-color: var(--dark);
   z-index: 6;
 }
 
-/* expander hover */
 .streamlit-expanderHeader:hover{
   transform: translateY(-3px);
   background: var(--card-bg);
-  color: var(--light);
-  border-color: var(--light);
+  color: var(--dark);
+  border-color: var(--dark);
 }
 
-/* small responsive tweaks */
 @media (max-width:720px){
   :root{ --tab-padding: 8px 12px; --tab-text-size: 0.98rem; }
   div[data-baseweb="tab-list"]{ gap:8px; }
@@ -248,11 +220,8 @@ div[data-testid="stTable"]:hover{
 }
 
 
-/* --- NEW CUSTOM STYLES --- */
-
-/* Team Cards */
 .team-card {
-     background: #537B2FFF; /* Uses the same color as --primary */
+     background: #537B2FFF;
      padding: 20px;
      border-radius: 15px;
      text-align: center;
@@ -285,35 +254,28 @@ div[data-testid="stTable"]:hover{
     font-size: 14px;
     margin-top: 40px;
     color: #f0e8e8;
-    /*height: #7ebb48; <- This line is commented out as it's invalid CSS */
 }
 
-/* Custom Styled Container */
 .my-styled-container {
-    /* Changed to match Dark Forest theme - using a dark variant */
     background-color: var(--card-bg);
     border-radius: 10px;
     padding: 20px;
 }
 
-
-/* Primary Button */
 button[kind="primary"] {
-    background-color: #225d25 !important;
-    color: white !important;
+    background-color: var(--dark) !important;
+    color: var(--deep) !important;
     border-radius: 8px;
     font-weight: 600;
 }
 
-/* Secondary Button */
 button[kind="secondary"] {
-    background-color: #2E7D32 !important;
-    color: #333 !important; /* Note: Black text on dark green might have low contrast */
+    background-color: var(--primary) !important;
+    color: var(--accent-text) !important;
     border-radius: 8px;
     font-weight: 500;
 }
 
-/* Button Hover and Focus effects */
 div.stButton > button:hover {
     transform: scale(1.03);
     transition: 0.1s ease;
@@ -329,4 +291,73 @@ div.stButton > button:focus {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
+}
+
+div[data-testid="stRadio"] label span.e1fb0a1v10 {
+    background-color: var(--dark) !important;
+    border-color: var(--dark) !important;
+}
+
+div[data-testid="stRadio"] label.st-bq .e1fb0a1v8 {
+    border-color: var(--dark) !important;
+}
+
+div[data-baseweb="tag"] {
+    background-color: var(--primary) !important;
+    color: var(--accent-text) !important;
+}
+div[data-baseweb="tag"] > span {
+    color: var(--accent-text) !important;
+}
+
+.stApp input[type="range"] {
+    accent-color: var(--dark) !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    background-color: var(--dark) !important;
+    border: 1px solid var(--dark) !important;
+}
+input[type="range"]::-moz-range-thumb {
+    background-color: var(--dark) !important;
+    border: 1px solid var(--dark) !important;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    background: #3A4A3A !important;
+    height: 6px !important;
+    border-radius: 3px;
+}
+input[type="range"]::-moz-range-progress {
+    background-color: var(--dark) !important;
+}
+input[type="range"]::-moz-range-track {
+    background: #3A4A3A !important;
+    height: 6px !important;
+    border-radius: 3px;
+}
+
+div[data-testid="stMultiSelect"] div[data-baseweb="select"] div[data-baseweb="input"] {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+    box-shadow: none !important;
+    transition: all var(--transition-fast) ease;
+}
+
+div[data-baseweb="popover"] ul[role="listbox"] {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    box-shadow: var(--shadow-pop) !important;
+}
+
+div[data-baseweb="popover"] ul[role="listbox"] li {
+    color: var(--text-main) !important;
+    font-size: 1rem !important;
+}
+
+div[data-baseweb="popover"] ul[role="listbox"] li[aria-selected="true"],
+div[data-baseweb="popover"] ul[role="listbox"] li:hover {
+    background-color: var(--dark) !important;
+    color: var(--deep) !important;
 }

@@ -1,6 +1,7 @@
 import streamlit as st
 
 class ConclusionsPage:
+
     def __init__(self, data_manager):
         self.dm = data_manager
 

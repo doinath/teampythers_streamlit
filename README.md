@@ -46,9 +46,9 @@ This project is a collaborative effort by the following members:
 
 ### Academic Context
 
-| Detail | Value                                                                                                        |
-| :--- |:-------------------------------------------------------------------------------------------------------------|
-| **Course Subject** | CS365 - Data Analytics and Visualization                                                                     |
-| **Institution** | Cebu Institute of Technology - University                                                                    |
-| **Implementation Scope** | This project serves as the comprehensive implementation of **all** concepts taught in CS365, **to be added** |
-| **Skills Leveraged** | The team has incorporated **self-taught skills** **to be added**                                             |
+| Detail | Value                                                                                                                                                               |
+| :--- |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Course Subject** | CS365 - Data Analytics and Visualization                                                                                                                            |
+| **Institution** | Cebu Institute of Technology - University                                                                                                                           |
+| **Implementation Scope** | This project serves as the comprehensive implementation of **all** concepts taught in CS365, these are Data Exploration, Data Analysis, Regression, and Clustering. |
+| **Skills Leveraged** | The team has incorporated self-taught skills, regression, data analysis, em clustering, apriori analysis, and association rules.                                    |

@@ -123,7 +123,7 @@ class DataPrepPage:
             title=dict(
                 font=dict(
                     size=18,
-                    color="#537B2F"
+                    color="#4C712B"
                 )
             ),
             margin=dict(l=20, r=20, t=50, b=20),

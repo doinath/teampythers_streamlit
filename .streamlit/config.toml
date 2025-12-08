@@ -1,0 +1,16 @@
+[theme]
+# Matches CSS --dark / #90ce24, used for general UI elements like links and checkmarks
+primaryColor = "#537B2F"
+## Matches CSS --deep / #0D1A0D, used for the overall app background
+backgroundColor = "#0D1A0D"
+## Matches CSS background gradient secondary color / #142C14
+secondaryBackgroundColor = "#142C14"
+### Matches CSS
+#--accent-text = #ffffff
+textColor = "#ffffff"
+## Sets the initial theme base
+base = "dark"
+#font = "sans serif"
+#
+#[server]
+#port = 8501

@@ -3,8 +3,8 @@
   --mid: #8DA750;
   --dark: #90ce24;
   --deep: #0D1A0D;
-  --accent-text: #ffffff;
-  --button-color: #000000;
+  --accent-text: #90ce24;
+  --button-color: #8DA750;
 
   --main-bg-gradient: linear-gradient(135deg,var(--deep) 0%, #142C14 100%);
   --sidebar-bg-gradient: linear-gradient(180deg,#071007 0%,var(--deep) 100%);
@@ -153,6 +153,7 @@ div[role="tab"]:hover{
   box-shadow: var(--shadow-soft);
 }
 
+/* --- MODIFIED PILL STYLES FOR CONSISTENCY --- */
 button[data-baseweb="tab"][aria-selected="true"],
 button[data-baseweb="tabs-base-tab"][aria-selected="true"],
 div[role="tab"][aria-selected="true"]{
@@ -183,19 +184,22 @@ div[role="tab"][aria-selected="true"] p{
   font-weight: 900 !important;
 }
 
+/* --- MODIFIED PILL STYLES FOR CONSISTENCY (Changed to use --card-bg for better integration) --- */
 button[data-baseweb="tab"]:not([aria-selected="true"]),
 button[data-baseweb="tabs-base-tab"]:not([aria-selected="true"]),
 div[role="tab"]:not([aria-selected="true"]){
-  background: var(--deep) !important;
-  border: 1px solid var(--deep) !important;
-  box-shadow: none !important;
+  background: var(--card-bg) !important; /* Changed from var(--deep) to var(--card-bg) */
+  border: 1px solid var(--primary) !important; /* Changed border to primary */
+  box-shadow: var(--shadow-soft) !important; /* Added soft shadow */
 }
 
 button[data-baseweb="tab"]:not([aria-selected="true"]) div p,
 button[data-baseweb="tabs-base-tab"]:not([aria-selected="true"]) div p,
 div[role="tab"]:not([aria-selected="true"]) p{
-    color: var(--text-sidebar) !important;
+    color: var(--header-color) !important; /* Changed from var(--text-sidebar) to var(--header-color) */
 }
+
+/* --- END MODIFIED PILL STYLES --- */
 
 div[data-testid="stMetric"]:hover,
 div[data-testid="stDataFrame"]:hover,
@@ -335,6 +339,7 @@ input[type="range"]::-moz-range-track {
     background: #3A4A3A !important;
     height: 6px !important;
     border-radius: 3px;
+
 }
 
 div[data-testid="stMultiSelect"] div[data-baseweb="select"] div[data-baseweb="input"] {
@@ -361,3 +366,45 @@ div[data-baseweb="popover"] ul[role="listbox"] li:hover {
     background-color: var(--dark) !important;
     color: var(--deep) !important;
 }
+
+/* --- NEW DARK MODE & INPUT FIELD STYLES --- */
+
+/* Force all text inputs, text areas, and number inputs to use dark theme colors */
+div[data-baseweb="input"] input,
+div[data-baseweb="textarea"] textarea,
+div[data-testid="stNumberInput"] input {
+    background-color: var(--deep) !important;
+    border: 1px solid var(--primary) !important;
+    color: var(--text-main) !important;
+}
+
+/* Style for text areas */
+div[data-baseweb="textarea"] {
+    background-color: var(--deep) !important;
+    border: 1px solid var(--primary) !important;
+    border-radius: 8px;
+}
+
+/* Style for select box and dropdown container backgrounds */
+div[data-testid="stSelectbox"] div[data-baseweb="select"] div[data-baseweb="input"],
+div[data-testid="stTextInput"] div[data-baseweb="input"] {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+}
+
+
+/* Fix for date input icon color */
+svg {
+    color: var(--accent-text) !important;
+}
+/* Ensure the main app container for all widgets is dark */
+div[data-testid="stAppViewBlock"] {
+    background: transparent !important;
+}
+/* Ensure the main content block has dark mode consistency */
+div[data-testid="stVerticalBlock"] {
+    background: transparent !important;
+}
+
+/* --- END NEW DARK MODE & INPUT FIELD STYLES --- */

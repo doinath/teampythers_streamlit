@@ -213,13 +213,13 @@ class ConclusionsPage:
         white_container = """
                         <style>
                         .st-key-c6 {
-                        background-color: #537B2FFF;
+                        background-color: #4C712B;
                         border-radius: 12px;
                         padding: 20px;
                         box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
-                        border: #7ebb48 solid 1px;    
+                        border: #7ebb48 solid 1px;
                         }
-                        
+
                         </style>
                         """
 
@@ -328,20 +328,18 @@ class ConclusionsPage:
         """)
 
         st.subheader("1. Key Takeaways")
+
         white_container = """
         <style>
         .st-key-c1, .st-key-c2, .st-key-c3, .st-key-c4,
         .st-key-c5 {
-        background-color: #537B2FFF;
+        background-color: #4C712B;
         border-radius: 12px;
         padding: 10px;
         box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
         }
         </style>
         """
-
-
-
         st.markdown(white_container, unsafe_allow_html=True)
 
         col1, col2, col3 = st.columns(3)
@@ -375,36 +373,6 @@ class ConclusionsPage:
         st.subheader(" Interactive Feature: The Inflation Chain Simulator")
         st.markdown(
             "Select a real-world scenario identified by the model to see how the price shock travels and how to stop it.")
-
-        pills_container = """
-            <style> 
-                div[data-testid="stPillContainer"] {
-                    margin-bottom: 10px;
-                }
-
-                div[data-testid="stPillContainer"] > div > button.stButton {
-                    background-color: rgba(20, 44, 20, 0.5) !important;
-                    color: #E4EB9C !important;
-                    border-radius: 20px;
-                    border: 1px solid #537B2F;
-                    transition: all 0.3s ease;
-                }
-
-                div[data-testid="stPillContainer"] > div > button.stButton:hover {
-                    transform: scale(1.05);
-                    background-color: rgba(45, 81, 40, 0.7) !important;
-                }
-
-                div[data-testid="stPillContainer"] > div > button.stButton[aria-selected="true"] {
-                    background-color: #537B2F !important;
-                    color:  #ffffff !important;
-                    border-color: #E4EB9C !important;
-                    transform: none !important; 
-                }
-            </style>
-        """
-
-        st.markdown(pills_container, unsafe_allow_html=True)
 
         scenario_type = st.pills(
             "Select a Contagion Type:",

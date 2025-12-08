@@ -274,12 +274,3 @@ class OverviewPage:
         fig_dist.update_traces(hovertemplate="<b>Price:</b> ₱%{x:.2f}<br><b>Count:</b> %{y}")
 
         return fig_dist
-
-    # def inject_css(self, file_name):
-    #     """Loads a local CSS file and injects it into the Streamlit app."""
-    #     try:
-    #         with open(file_name) as f:
-    #             st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-    #
-    #     except FileNotFoundError:
-    #         st.error(f"Error: Could not find '{file_name}'. Ensure it is in the root directory.")

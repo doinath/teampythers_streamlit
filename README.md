@@ -8,6 +8,8 @@ This project aims to develop an interactive streamlit app for the course subject
 ```angular2html
 teampythers_streamlit/
 ├── .gitignore                            # Tells Git to ignore files like venv/ and notes/
+├── .streamlit/                           # Directory for customizing and configuring your Streamlit application:
+│   └── config.toml                       # Used for general settings (theme, port, cache, etc.).
 ├── assets/                               # For static resources like CSS and images
 │   │   ├── css/                          # Directory for the .css files
 │   │   │   ├── style.css                 # Custom styling for the overall app

@@ -213,7 +213,7 @@ class ConclusionsPage:
         white_container = """
                         <style>
                         .st-key-c6 {
-                        background-color: #537B2FFF;
+                        background-color: #4C712B;
                         border-radius: 12px;
                         padding: 20px;
                         box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
@@ -333,7 +333,7 @@ class ConclusionsPage:
         <style>
         .st-key-c1, .st-key-c2, .st-key-c3, .st-key-c4,
         .st-key-c5 {
-        background-color: #5B8734;
+        background-color: #4C712B;
         border-radius: 12px;
         padding: 10px;
         box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
